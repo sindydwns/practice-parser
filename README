@@ -1,0 +1,2 @@
+It's a parser for my web server project written in C++.
+The goal is to develop a general parser for CSV, nginx config, and more.
