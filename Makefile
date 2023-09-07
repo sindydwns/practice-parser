@@ -6,6 +6,8 @@ SRC = \
 	parser/Consumer.cpp \
 	parser/Parser.cpp \
 	parser/ParseResult.cpp \
+	parser/APattern.cpp \
+	parser/PatternOptionGroup.cpp \
 	main.cpp
 .PHONY: all clean fclean re test
 

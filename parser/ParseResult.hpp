@@ -2,6 +2,7 @@
 #define ParseResult_HPP
 
 #include <iostream>
+#include <vector>
 
 class ParseResult
 {

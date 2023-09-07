@@ -2,6 +2,7 @@
 #include <fstream>
 #include <sstream>
 #include "parser/Parser.hpp"
+#include "parser/PatternOptionGroup.hpp"
 
 int readFile(std::fstream &fs, std::string filename)
 {
@@ -19,9 +20,15 @@ int main(int argc, char **argv)
     std::string line;
     while (std::getline(in, line)) {
         std::cout << "> " << line << std::endl;
-        Parser parser;
+
+        Parser parser(
+            new PatternOptionGroup()
+        );
+
         ParseResult *res = parser.parse(line);
-        std::cout << *res << std::endl;
+        if (res != NULL) std::cout << *res << std::endl;
+        else std::cout << "[ invalid ]" << std::endl;
+            
         delete res;
     }
     return 0;
