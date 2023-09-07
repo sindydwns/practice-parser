@@ -1,13 +1,16 @@
 NAME = main
 .DEFAULT_GOAL = all
 
-CXXFLAGS = -std=c++98 -Wall -Wextra -Werror -MMD -MP
+CXXFLAGS = -std=c++98 -Wall -Wextra -Werror -MMD -MP -g3
 SRC = \
 	parser/Consumer.cpp \
 	parser/Parser.cpp \
 	parser/ParseResult.cpp \
 	parser/APattern.cpp \
 	parser/PatternOptionGroup.cpp \
+	parser/PatternSequenceGroup.cpp \
+	parser/PatternStartWith.cpp \
+	parser/PatternReadUntil.cpp \
 	main.cpp
 .PHONY: all clean fclean re test
 

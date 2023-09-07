@@ -10,14 +10,14 @@ class PatternOptionGroup: public APattern
 public:
     PatternOptionGroup();
     ~PatternOptionGroup();
-    PatternOptionGroup(const PatternOptionGroup &rhs);
-    PatternOptionGroup &operator=(const PatternOptionGroup &rhs);
 
     virtual bool test(std::stringstream &ss) const;
 
     PatternOptionGroup *addPattern(APattern *pattern);
 
 private:
+    PatternOptionGroup(const PatternOptionGroup &rhs);
+    PatternOptionGroup &operator=(const PatternOptionGroup &rhs);
     std::vector<APattern*> patterns;
 };
 

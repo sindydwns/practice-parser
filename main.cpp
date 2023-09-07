@@ -3,6 +3,9 @@
 #include <sstream>
 #include "parser/Parser.hpp"
 #include "parser/PatternOptionGroup.hpp"
+#include "parser/PatternSequenceGroup.hpp"
+#include "parser/PatternStartWith.hpp"
+#include "parser/PatternReadUntil.hpp"
 
 int readFile(std::fstream &fs, std::string filename)
 {
@@ -22,14 +25,16 @@ int main(int argc, char **argv)
         std::cout << "> " << line << std::endl;
 
         Parser parser(
-            new PatternOptionGroup()
+            (new PatternOptionGroup())
+            ->addPattern((new PatternSequenceGroup())
+                ->addPattern(new PatternStartWith("Host"))
+                ->addPattern(new PatternReadUntil(":"))
+                ->addPattern(new PatternReadUntil("\n\0"))
+            )
         );
 
-        ParseResult *res = parser.parse(line);
-        if (res != NULL) std::cout << *res << std::endl;
-        else std::cout << "[ invalid ]" << std::endl;
-            
-        delete res;
+        bool res = parser.test(line);
+        std::cout << res << std::endl;
     }
     return 0;
 }
