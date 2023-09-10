@@ -2,8 +2,8 @@
 
 APattern::APattern() { }
 APattern::APattern(bool useTrim, bool useIgnoreCase)
-    : useTrim(useTrim), useIgnoreCase(useIgnoreCase) {}
-APattern::~APattern() {}
+    : useTrim(useTrim), useIgnoreCase(useIgnoreCase) { }
+APattern::~APattern() { }
 APattern::APattern(const APattern &rhs) { *this = rhs; }
 APattern &APattern::operator=(const APattern &rhs) { (void)rhs; return *this; }
 

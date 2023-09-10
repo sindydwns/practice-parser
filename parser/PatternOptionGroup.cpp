@@ -9,21 +9,25 @@ PatternOptionGroup::PatternOptionGroup(size_t minMatch, size_t maxMatch)
 PatternOptionGroup::PatternOptionGroup(const PatternOptionGroup &rhs) { *this = rhs; }
 PatternOptionGroup::~PatternOptionGroup()
 {
-    // TODO delete patterns
+    for (size_t i = 0; i < this->patterns.size(); i++) {
+        delete this->patterns[i];
+    }
 }
 PatternOptionGroup &PatternOptionGroup::operator=(const PatternOptionGroup &rhs) { (void)rhs; return *this; }
 
 ParseResult *PatternOptionGroup::parse(std::stringstream &ss) const
 {
-    std::streampos start = ss.tellg();
-    std::streampos cursor = start;
+    std::streampos pos = ss.tellg();
+    if (pos == std::streampos(-1)) return NULL;
+
+    std::streampos cursor = pos;
     std::vector<ParseResult*> children;
     for (size_t i = 0; i < this->patterns.size();) {
         ParseResult *child = patterns[i]->parse(ss);
         if (child != NULL) {
             children.push_back(child);
-            if (ss.eof()) break;
             cursor = ss.tellg();
+            if (ss.fail()) break;
             i = 0;
         }
         else i++;
@@ -33,7 +37,7 @@ ParseResult *PatternOptionGroup::parse(std::stringstream &ss) const
         for (size_t i = 0; i < children.size(); i++) {
             delete children[i];
         }
-        ss.seekg(start);
+        ss.seekg(pos);
         return NULL;
     }
     return new Result(children);

@@ -16,6 +16,8 @@ ParseResult *PatternWord::parse(std::stringstream &ss) const
     if (ss.eof()) return NULL;
 
     std::streampos pos = ss.tellg();
+    if (pos == std::streampos(-1)) return NULL;
+
     std::string ws;
     char c;
     while (true) {

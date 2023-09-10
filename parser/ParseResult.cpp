@@ -8,7 +8,12 @@ ParseResult::ParseResult(std::vector<ParseResult *> children)
 ParseResult::ParseResult(std::string match, std::vector<ParseResult *> children)
     : match(match), children(children) {}
 ParseResult::ParseResult(const ParseResult &rhs) { *this = rhs; }
-ParseResult::~ParseResult() { }
+ParseResult::~ParseResult()
+{
+    for (size_t i = 0; i < this->children.size(); i++) {
+        delete this->children[i];
+    }
+}
 ParseResult &ParseResult::operator=(const ParseResult &rhs)
 {
     if (this == &rhs) return *this;

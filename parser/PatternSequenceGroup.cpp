@@ -4,20 +4,24 @@ PatternSequenceGroup::PatternSequenceGroup() { }
 PatternSequenceGroup::PatternSequenceGroup(const PatternSequenceGroup &rhs) { *this = rhs; }
 PatternSequenceGroup::~PatternSequenceGroup()
 {
-    // TODO delete patterns
+    for (size_t i = 0; i < this->patterns.size(); i++) {
+        delete this->patterns[i];
+    }
 }
 PatternSequenceGroup &PatternSequenceGroup::operator=(const PatternSequenceGroup &rhs) { (void)rhs; return *this; }
 
 ParseResult *PatternSequenceGroup::parse(std::stringstream &ss) const
 {
     std::streampos pos = ss.tellg();
+    if (pos == std::streampos(-1)) return NULL;
+
     std::vector<ParseResult*> children;
     for (size_t i = 0; i < this->patterns.size(); i++) {
         ParseResult *child = patterns[i]->parse(ss);
         if (child == NULL) {
             ss.seekg(pos);
             for (size_t k = 0; k < children.size(); k++) {
-                delete children[i];
+                delete children[k];
             }
             return NULL;
         }

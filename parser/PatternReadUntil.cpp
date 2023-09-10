@@ -13,8 +13,7 @@ ParseResult *PatternReadUntil::parse(std::stringstream &ss) const
 {
     if (this->str.empty()) return NULL;
     std::streampos pos = ss.tellg();
-    if (pos == std::streampos(-1))
-        return NULL;
+    if (pos == std::streampos(-1)) return NULL;
 
     char c;
     size_t idx = 0;

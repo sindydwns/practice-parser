@@ -56,8 +56,14 @@ int readFile(std::fstream &fs, std::string filename)
     return 0;
 }
 
+void leakcheck()
+{
+    system("leaks main");
+}
+
 int main(int argc, char **argv)
 {
+    atexit(leakcheck);
     std::fstream in;
     if (argc != 2 || readFile(in, std::string(argv[1]))) {
         test();
