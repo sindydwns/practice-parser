@@ -1,11 +1,12 @@
 #include "PatternReadUntil.hpp"
 #include <iostream>
 PatternReadUntil::PatternReadUntil()
-    : APattern(true, false), useStrict(false) { }
+    : APattern("PatternReadUntil", true, false), useStrict(false) { }
 PatternReadUntil::PatternReadUntil(const std::string str)
-    : APattern(true, false), str(str), useStrict(false)  { }
+    : APattern("PatternReadUntil", true, false), str(str), useStrict(false)  { }
+PatternReadUntil::PatternReadUntil(const PatternReadUntil &rhs)
+    : APattern("PatternReadUntil") { *this = rhs; }
 PatternReadUntil::~PatternReadUntil() {}
-PatternReadUntil::PatternReadUntil(const PatternReadUntil &rhs) { *this = rhs; }
 PatternReadUntil &PatternReadUntil::operator=(const PatternReadUntil &rhs) { (void)rhs; return *this; }
 
 bool PatternReadUntil::test(std::stringstream &ss) const

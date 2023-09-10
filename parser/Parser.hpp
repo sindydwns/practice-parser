@@ -3,7 +3,7 @@
 
 #include <sstream>
 #include "APattern.hpp"
-#include "ParseResult.hpp"
+#include "AParseResult.hpp"
 
 class Parser
 {
@@ -12,8 +12,9 @@ public:
     ~Parser();
     Parser(const Parser &rhs);
     Parser &operator=(const Parser &rhs);
-    bool test(std::string str) const;
-    ParseResult *parse(std::string str) const;
+
+    AParseResult *parse(std::string str) const;
+
 private:
     const APattern *pattern;
     Parser();

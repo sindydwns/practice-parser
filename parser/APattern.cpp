@@ -1,21 +1,19 @@
 #include "APattern.hpp"
 
 APattern::APattern() { }
-APattern::APattern(bool useTrim, bool useIgnoreCase)
-    : useTrim(useTrim), useIgnoreCase(useIgnoreCase) { }
+APattern::APattern(std::string type)
+    : type(type) { }
+APattern::APattern(std::string type, bool useTrim, bool useIgnoreCase)
+    : type(type), useTrim(useTrim), useIgnoreCase(useIgnoreCase) {}
 APattern::~APattern() {}
 APattern::APattern(const APattern &rhs) { *this = rhs; }
 APattern &APattern::operator=(const APattern &rhs) { (void)rhs; return *this; }
 
-const std::string &APattern::getType()
-{
-    return this->type;
-}
-
-const std::string &APattern::getTag()
-{
-    return this->tag;
-}
+const std::string &APattern::getType() const { return this->type; }
+const std::string &APattern::getTag() const { return this->tag; }
+APattern *APattern::setTag(std::string &tag) { this->tag = tag; return this; }
+APattern *APattern::setUseTrim(bool useTrim) { this->useTrim = useTrim; return this; }
+APattern *APattern::setUseIgnoreCase(bool useIgnoreCase) { this->useIgnoreCase = useIgnoreCase; return this; }
 
 std::string APattern::trim(const std::string &str)
 {
@@ -64,6 +62,3 @@ bool APattern::equal(const char c1, const char c2) const
     if (this->useIgnoreCase == false) return c1 == c2;
     return std::tolower(c1) == std::tolower(c2);
 }
-
-APattern *APattern::setUseTrim(bool useTrim) { this->useTrim = useTrim; return this; }
-APattern *APattern::setUseIgnoreCase(bool useIgnoreCase) { this->useIgnoreCase = useIgnoreCase; return this; }

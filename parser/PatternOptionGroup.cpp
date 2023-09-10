@@ -1,11 +1,13 @@
 #include "PatternOptionGroup.hpp"
 
-PatternOptionGroup::PatternOptionGroup() { }
+PatternOptionGroup::PatternOptionGroup()
+    : APattern("PatternOptionGroup") { }
+PatternOptionGroup::PatternOptionGroup(const PatternOptionGroup &rhs)
+    : APattern("PatternOptionGroup") { *this = rhs; }
 PatternOptionGroup::~PatternOptionGroup()
 {
     // TODO delete patterns
 }
-PatternOptionGroup::PatternOptionGroup(const PatternOptionGroup &rhs) { *this = rhs; }
 PatternOptionGroup &PatternOptionGroup::operator=(const PatternOptionGroup &rhs) { (void)rhs; return *this; }
 
 bool PatternOptionGroup::test(std::stringstream &ss) const

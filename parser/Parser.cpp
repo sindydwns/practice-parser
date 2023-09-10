@@ -17,15 +17,7 @@ Parser &Parser::operator=(const Parser &rhs)
     return *this;
 }
 
-bool Parser::test(std::string str) const
-{
-    if (pattern == NULL) return false;
-    std::stringstream ss(str);
-    ss << std::noskipws;
-    return pattern->test(ss);
-}
-
-ParseResult *Parser::parse(std::string str) const
+AParseResult *Parser::parse(std::string str) const
 {
     if (pattern == NULL) return NULL;
     std::stringstream ss(str);

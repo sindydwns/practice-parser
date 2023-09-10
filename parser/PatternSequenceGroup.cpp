@@ -1,11 +1,13 @@
 #include "PatternSequenceGroup.hpp"
 
-PatternSequenceGroup::PatternSequenceGroup() { }
+PatternSequenceGroup::PatternSequenceGroup()
+    : APattern("PatternSequenceGroup") { }
+PatternSequenceGroup::PatternSequenceGroup(const PatternSequenceGroup &rhs)
+    : APattern("PatternSequenceGroup") { *this = rhs; }
 PatternSequenceGroup::~PatternSequenceGroup()
 {
     // TODO delete patterns
 }
-PatternSequenceGroup::PatternSequenceGroup(const PatternSequenceGroup &rhs) { *this = rhs; }
 PatternSequenceGroup &PatternSequenceGroup::operator=(const PatternSequenceGroup &rhs) { (void)rhs; return *this; }
 
 bool PatternSequenceGroup::test(std::stringstream &ss) const

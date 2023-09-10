@@ -1,23 +1,26 @@
 #ifndef APattern_HPP
 #define APattern_HPP
 
+#include <vector>
 #include <sstream>
 
 class APattern
 {
 public:
     virtual ~APattern();
-    const std::string &getType();
-    const std::string &getTag();
+
+    const std::string &getType() const;
+    const std::string &getTag() const;
 
     virtual bool test(std::stringstream &ss) const = 0;
 
+    APattern *setTag(std::string &tag);
     APattern *setUseTrim(bool useTrim);
     APattern *setUseIgnoreCase(bool useIgnoreCase);
 
 protected:
-    APattern();
-    APattern(bool useTrim, bool useIgnoreCase);
+    APattern(std::string type);
+    APattern(std::string type, bool useTrim, bool useIgnoreCase);
 
     static std::string trim(const std::string &str);
     static std::string toupper(const std::string &str);
@@ -29,6 +32,7 @@ protected:
     std::string tag;
 
 private:
+    APattern();
     APattern(const APattern &rhs);
     virtual APattern &operator=(const APattern &rhs);
 

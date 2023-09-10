@@ -33,8 +33,9 @@ int main(int argc, char **argv)
             )
         );
 
-        bool res = parser.test(line);
-        std::cout << res << std::endl;
+        AParseResult *res = parser.parse(line);
+        if (res == NULL) std::cout << "( null )" << std::endl;
+        else std::cout << res->toString() << std::endl;
     }
     return 0;
 }

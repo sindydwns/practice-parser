@@ -1,11 +1,11 @@
 #include "PatternEqual.hpp"
 #include <iostream>
 PatternEqual::PatternEqual()
-    : APattern(true, false) { }
+    : APattern("PatternEqual", true, false) { }
 PatternEqual::PatternEqual(const std::string str)
-    : APattern(true, false), str(str) { }
+    : APattern("PatternEqual", true, false), str(str) { }
 PatternEqual::~PatternEqual() {}
-PatternEqual::PatternEqual(const PatternEqual &rhs) { *this = rhs; }
+PatternEqual::PatternEqual(const PatternEqual &rhs): APattern("PatternEqual") { *this = rhs; }
 PatternEqual &PatternEqual::operator=(const PatternEqual &rhs) { (void)rhs; return *this; }
 
 bool PatternEqual::test(std::stringstream &ss) const
