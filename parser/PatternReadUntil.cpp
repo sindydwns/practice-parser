@@ -2,41 +2,49 @@
 #include <iostream>
 
 PatternReadUntil::PatternReadUntil()
-    : APattern(true, false), useStrict(false), useSuffix(false) { }
+    : APattern(true, false), useSuffix(false) { }
 PatternReadUntil::PatternReadUntil(const std::string str)
-    : APattern(true, false), str(str), useStrict(false), useSuffix(false)  { }
+    : APattern(true, false), str(str), useSuffix(false)  { }
 PatternReadUntil::PatternReadUntil(const PatternReadUntil &rhs) { *this = rhs; }
 PatternReadUntil::~PatternReadUntil() {}
 PatternReadUntil &PatternReadUntil::operator=(const PatternReadUntil &rhs) { (void)rhs; return *this; }
 
 ParseResult *PatternReadUntil::parse(std::stringstream &ss) const
 {
-    if (this->str.empty() && this->useStrict) return NULL;
-    if (this->str.empty() && this->useStrict == false) return new Result("");
+    if (this->str.empty()) return NULL;
     std::streampos pos = ss.tellg();
+    if (pos == std::streampos(-1))
+        return NULL;
 
     char c;
     size_t idx = 0;
     std::string match;
-    while (ss.eof() == false && ss >> c && ss.fail() == false) {
+    while (true) {
+        ss >> c;
+        if (ss.fail()) {
+            ss.clear();
+            ss.seekg(pos);
+            break;
+        }
+
         match.push_back(c);
+
         if (this->str[idx] == c) idx++;
         else idx = 0;
+
         if (idx >= this->str.size()) break;
     }
 
-    if (idx >= this->str.size() || this->useStrict == false) {
-        std::string::size_type idx = match.rfind(this->str);
-        if (idx != std::string::npos) match = std::string(match.begin(), match.begin() + idx);
-        if (this->useTrim) return new Result(this->trim(match));
-        else return new Result(match);
+    if (idx < this->str.size()) {
+        ss.seekg(pos);
+        return NULL;
     }
 
-    ss.seekg(pos);
-    return NULL;
+    match = std::string(match.begin(), match.end() - this->str.size());
+    if (this->useTrim) return new Result(this->trim(match));
+    else return new Result(match);
 }
 
-PatternReadUntil *PatternReadUntil::setUseStrict(bool useStrict) { this->useStrict = useStrict; return this; }
 PatternReadUntil *PatternReadUntil::setUseSuffix(bool useSuffix) { this->useSuffix = useSuffix; return this; }
 
 // Result

@@ -6,6 +6,48 @@
 #include "parser/PatternSequenceGroup.hpp"
 #include "parser/PatternEqual.hpp"
 #include "parser/PatternReadUntil.hpp"
+#include "parser/PatternWord.hpp"
+#include "parser/PatternReadAll.hpp"
+
+void test()
+{
+    std::string file;
+
+    file += "GET /index.html HTTP/1.1\r\n";
+    file += "Host: www.example.com\n";
+    file += "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36\n";
+    file += "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8\n";
+    file += "Accept-Language: en-US,en;q=0.5\n";
+    file += "Accept-Encoding: gzip, deflate\n";
+    file += "Connection: keep-alive\r\n";
+    file += "\r\n";
+    file += "body";
+
+    PatternSequenceGroup *startline = new PatternSequenceGroup();
+    startline->addPattern(new PatternWord());
+    startline->addPattern(new PatternWord());
+    startline->addPattern(new PatternWord());
+    PatternSequenceGroup *header = new PatternSequenceGroup();
+    header->addPattern(new PatternReadUntil(":"));
+    header->addPattern(new PatternReadUntil("\n"));
+    PatternOptionGroup *headers = new PatternOptionGroup(0, 999);
+    headers->addPattern(header);
+    PatternReadAll *body = new PatternReadAll();
+    PatternSequenceGroup *req = new PatternSequenceGroup();
+    req->addPattern(startline);
+    req->addPattern(new PatternEqual("\r\n"));
+    req->addPattern(headers);
+    req->addPattern(new PatternEqual("\r\n"));
+    req->addPattern(body);
+
+    Parser parser(req);
+    ParseResult *res = parser.parse(file);
+    if (res == NULL) std::cout << "( fail )" << std::endl;
+    else {
+        std::cout << res->toString() << std::endl;
+        delete res;
+    }
+}
 
 int readFile(std::fstream &fs, std::string filename)
 {
@@ -17,7 +59,10 @@ int readFile(std::fstream &fs, std::string filename)
 int main(int argc, char **argv)
 {
     std::fstream in;
-    if (argc != 2 || readFile(in, std::string(argv[1]))) return 1;
+    if (argc != 2 || readFile(in, std::string(argv[1]))) {
+        test();
+        return 0;
+    }
 
     std::cout << "--------------------------" << std::endl;
     std::string line;
@@ -27,7 +72,7 @@ int main(int argc, char **argv)
         Parser parser(
             (new PatternOptionGroup(1))
             ->addPattern((new PatternSequenceGroup())
-                ->addPattern((new PatternReadUntil(":"))->setUseStrict(true))
+                ->addPattern((new PatternReadUntil(":")))
                 ->addPattern(new PatternReadUntil("\r\n"))
             )
         );

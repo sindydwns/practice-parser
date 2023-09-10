@@ -10,7 +10,6 @@ public:
     ~PatternReadUntil();
 
     virtual ParseResult *parse(std::stringstream &ss) const;
-    PatternReadUntil *setUseStrict(bool useStrict);
     PatternReadUntil *setUseSuffix(bool useSuffix);
 
     class Result: public ParseResult
@@ -32,7 +31,6 @@ private:
     PatternReadUntil &operator=(const PatternReadUntil &rhs);
 
     std::string str;
-    bool useStrict;
     bool useSuffix;
     
 };

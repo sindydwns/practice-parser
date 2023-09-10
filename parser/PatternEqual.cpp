@@ -17,9 +17,21 @@ ParseResult *PatternEqual::parse(std::stringstream &ss) const
     ss.seekg(pos);
     if (end - pos < static_cast<std::streamoff>(this->str.size())) return NULL;
 
-    ss.read(&buffer[0], this->str.size());
-    buffer[this->str.size()] = '\0';
-    if (APattern::equal(buffer, this->str)) return new Result(buffer);
+    char c;
+    std::string match;
+    while (match.size() < this->str.size()) {
+        ss >> c;
+        if (ss.fail()) {
+            ss.clear();
+            ss.seekg(pos);
+            return NULL;
+        }
+        match.push_back(c);
+    }
+    if (APattern::equal(match, this->str)) {
+        if (this->useTrim) return new Result(APattern::trim(buffer));
+        return new Result(buffer);
+    }
     ss.seekg(pos);
     return NULL;
 }

@@ -22,5 +22,8 @@ ParseResult *Parser::parse(std::string str) const
     if (pattern == NULL) return NULL;
     std::stringstream ss(str);
     ss << std::noskipws;
-    return this->pattern->parse(ss);
+    ParseResult *res = this->pattern->parse(ss);
+    if (ss.eof()) return res;
+    delete res;
+    return NULL;
 }
