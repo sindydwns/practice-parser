@@ -4,7 +4,7 @@
 #include "parser/Parser.hpp"
 #include "parser/PatternOptionGroup.hpp"
 #include "parser/PatternSequenceGroup.hpp"
-#include "parser/PatternStartWith.hpp"
+#include "parser/PatternEqual.hpp"
 #include "parser/PatternReadUntil.hpp"
 
 int readFile(std::fstream &fs, std::string filename)
@@ -27,9 +27,9 @@ int main(int argc, char **argv)
         Parser parser(
             (new PatternOptionGroup())
             ->addPattern((new PatternSequenceGroup())
-                ->addPattern(new PatternStartWith("Host"))
+                ->addPattern(new PatternEqual("Host"))
                 ->addPattern(new PatternReadUntil(":"))
-                ->addPattern(new PatternReadUntil("\n\0"))
+                ->addPattern(new PatternReadUntil("\r\n"))
             )
         );
 

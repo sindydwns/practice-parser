@@ -9,7 +9,7 @@ SRC = \
 	parser/APattern.cpp \
 	parser/PatternOptionGroup.cpp \
 	parser/PatternSequenceGroup.cpp \
-	parser/PatternStartWith.cpp \
+	parser/PatternEqual.cpp \
 	parser/PatternReadUntil.cpp \
 	main.cpp
 .PHONY: all clean fclean re test

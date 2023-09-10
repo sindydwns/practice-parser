@@ -10,7 +10,8 @@ public:
     ~PatternReadUntil();
 
     virtual bool test(std::stringstream &ss) const;
-    PatternReadUntil *setUseTrim(bool useTrim);
+
+    PatternReadUntil *setUseStrict(bool useStrict);
 
 private:
     PatternReadUntil();
@@ -18,7 +19,8 @@ private:
     PatternReadUntil &operator=(const PatternReadUntil &rhs);
 
     std::string str;
-    bool useTrim;
+    bool useStrict;
+    
 };
 
 #endif
