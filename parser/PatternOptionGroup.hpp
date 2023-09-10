@@ -9,6 +9,8 @@ class PatternOptionGroup: public APattern
 {
 public:
     PatternOptionGroup();
+    PatternOptionGroup(size_t minMatch);
+    PatternOptionGroup(size_t minMatch, size_t maxMatch);
     ~PatternOptionGroup();
 
     virtual ParseResult *parse(std::stringstream &ss) const;
@@ -30,7 +32,10 @@ public:
 private:
     PatternOptionGroup(const PatternOptionGroup &rhs);
     PatternOptionGroup &operator=(const PatternOptionGroup &rhs);
+
     std::vector<APattern*> patterns;
+    size_t minMatch;
+    size_t maxMatch;
 };
 
 #endif

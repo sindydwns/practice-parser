@@ -22,10 +22,10 @@ int main(int argc, char **argv)
     std::cout << "--------------------------" << std::endl;
     std::string line;
     while (std::getline(in, line)) {
-        std::cout << "> " << line << std::endl;
+        std::cout << line << std::endl;
 
         Parser parser(
-            (new PatternOptionGroup())
+            (new PatternOptionGroup(1))
             ->addPattern((new PatternSequenceGroup())
                 ->addPattern(new PatternEqual("Host"))
                 ->addPattern(new PatternReadUntil(":"))
@@ -34,8 +34,11 @@ int main(int argc, char **argv)
         );
 
         ParseResult *res = parser.parse(line);
-        if (res == NULL) std::cout << "( null )" << std::endl;
-        else std::cout << res->toString() << std::endl;
+        if (res == NULL) std::cout << "> ( null )" << std::endl;
+        else {
+            std::cout << "> " << res->toString() << std::endl;
+            delete res;
+        }
     }
     return 0;
 }

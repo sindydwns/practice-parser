@@ -1,6 +1,11 @@
 #include "PatternOptionGroup.hpp"
 
-PatternOptionGroup::PatternOptionGroup() { }
+PatternOptionGroup::PatternOptionGroup()
+    : minMatch(0), maxMatch(1) { }
+PatternOptionGroup::PatternOptionGroup(size_t minMatch)
+    : minMatch(minMatch), maxMatch(1) { maxMatch = minMatch > maxMatch ? minMatch: maxMatch; }
+PatternOptionGroup::PatternOptionGroup(size_t minMatch, size_t maxMatch)
+    : minMatch(minMatch), maxMatch(maxMatch) { maxMatch = minMatch > maxMatch ? minMatch: maxMatch; }
 PatternOptionGroup::PatternOptionGroup(const PatternOptionGroup &rhs) { *this = rhs; }
 PatternOptionGroup::~PatternOptionGroup()
 {
@@ -10,21 +15,27 @@ PatternOptionGroup &PatternOptionGroup::operator=(const PatternOptionGroup &rhs)
 
 ParseResult *PatternOptionGroup::parse(std::stringstream &ss) const
 {
-    std::streampos pos = ss.tellg();
+    std::streampos start = ss.tellg();
+    std::streampos cursor = start;
     std::vector<ParseResult*> children;
-    for (size_t i = 0; i < this->patterns.size(); i++) {
+    for (size_t i = 0; i < this->patterns.size();) {
         ParseResult *child = patterns[i]->parse(ss);
         if (child != NULL) {
+            cursor = ss.tellg();
             children.push_back(child);
-            return new Result(children);
+            i = 0;
         }
-        ss.seekg(pos);
+        else i++;
+        ss.seekg(cursor);
     }
-    for (size_t i = 0; i < children.size(); i++) {
-        delete children[i];
+    if (children.size() < minMatch || children.size() > maxMatch) {
+        for (size_t i = 0; i < children.size(); i++) {
+            delete children[i];
+        }
+        ss.seekg(start);
+        return NULL;
     }
-    ss.seekg(pos);
-    return NULL;
+    return new Result(children);
 }
 
 PatternOptionGroup *PatternOptionGroup::addPattern(APattern *pattern)
