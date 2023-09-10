@@ -9,9 +9,21 @@ public:
     PatternReadUntil(const std::string str);
     ~PatternReadUntil();
 
-    virtual bool test(std::stringstream &ss) const;
-
+    virtual ParseResult *parse(std::stringstream &ss) const;
     PatternReadUntil *setUseStrict(bool useStrict);
+
+    class Result: public ParseResult
+    {
+    public:
+        Result(std::string match);
+
+    private:
+        Result();
+        Result(const Result &rhs);
+        Result &operator=(const Result &rhs);
+        ~Result();
+
+    };
 
 private:
     PatternReadUntil();

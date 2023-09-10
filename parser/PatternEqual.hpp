@@ -9,7 +9,20 @@ public:
     PatternEqual(const std::string str);
     ~PatternEqual();
 
-    virtual bool test(std::stringstream &ss) const;
+    virtual ParseResult *parse(std::stringstream &ss) const;
+
+    class Result: public ParseResult
+    {
+    public:
+        Result(std::string match);
+
+    private:
+        Result();
+        Result(const Result &rhs);
+        Result &operator=(const Result &rhs);
+        ~Result();
+
+    };
 
 private:
     PatternEqual();

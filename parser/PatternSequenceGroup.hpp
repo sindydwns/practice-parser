@@ -11,9 +11,21 @@ public:
     PatternSequenceGroup();
     ~PatternSequenceGroup();
 
-    virtual bool test(std::stringstream &ss) const;
-
+    virtual ParseResult *parse(std::stringstream &ss) const;
     PatternSequenceGroup *addPattern(APattern *pattern);
+
+    class Result: public ParseResult
+    {
+    public:
+        Result(std::vector<ParseResult*> children);
+
+    private:
+        Result();
+        Result(const Result &rhs);
+        Result &operator=(const Result &rhs);
+        ~Result();
+
+    };
 
 private:
     PatternSequenceGroup(const PatternSequenceGroup &rhs);

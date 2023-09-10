@@ -1,34 +1,44 @@
 #include "PatternReadUntil.hpp"
 #include <iostream>
+
 PatternReadUntil::PatternReadUntil()
-    : APattern("PatternReadUntil", true, false), useStrict(false) { }
+    : APattern(true, false), useStrict(false) { }
 PatternReadUntil::PatternReadUntil(const std::string str)
-    : APattern("PatternReadUntil", true, false), str(str), useStrict(false)  { }
-PatternReadUntil::PatternReadUntil(const PatternReadUntil &rhs)
-    : APattern("PatternReadUntil") { *this = rhs; }
+    : APattern(true, false), str(str), useStrict(false)  { }
+PatternReadUntil::PatternReadUntil(const PatternReadUntil &rhs) { *this = rhs; }
 PatternReadUntil::~PatternReadUntil() {}
 PatternReadUntil &PatternReadUntil::operator=(const PatternReadUntil &rhs) { (void)rhs; return *this; }
 
-bool PatternReadUntil::test(std::stringstream &ss) const
+ParseResult *PatternReadUntil::parse(std::stringstream &ss) const
 {
-    if (this->str.empty()) return this->useStrict == false;
+    if (this->str.empty() && this->useStrict) return NULL;
+    if (this->str.empty() && this->useStrict == false) return new Result("");
     std::streampos pos = ss.tellg();
 
     char c;
-    std::string res;
     size_t idx = 0;
+    std::string match;
+    std::vector<ParseResult*> children;
     while (ss.eof() == false) {
         ss >> c;
-        res.push_back(c);
+        match.push_back(c);
         if (this->str[idx] == c) idx++;
         else idx = 0;
-        if (idx >= this->str.size()) return true;
+        if (idx >= this->str.size()) return new Result(match);
     }
 
-    if (this->useStrict == false) return true;
+    if (this->useStrict == false) return new Result(match);
 
     ss.seekg(pos);
-    return false;
+    return NULL;
 }
 
 PatternReadUntil *PatternReadUntil::setUseStrict(bool useStrict) { this->useStrict = useStrict; return this; }
+
+// Result
+PatternReadUntil::Result::Result() { }
+PatternReadUntil::Result::Result(const PatternReadUntil::Result &rhs) { *this = rhs; }
+PatternReadUntil::Result::Result(std::string str)
+    : ParseResult(str) { }
+PatternReadUntil::Result &PatternReadUntil::Result::operator=(const Result &rhs) { (void)rhs; return *this; }
+PatternReadUntil::Result::~Result() { }

@@ -1,15 +1,12 @@
 #include "APattern.hpp"
 
 APattern::APattern() { }
-APattern::APattern(std::string type)
-    : type(type) { }
-APattern::APattern(std::string type, bool useTrim, bool useIgnoreCase)
-    : type(type), useTrim(useTrim), useIgnoreCase(useIgnoreCase) {}
+APattern::APattern(bool useTrim, bool useIgnoreCase)
+    : useTrim(useTrim), useIgnoreCase(useIgnoreCase) {}
 APattern::~APattern() {}
 APattern::APattern(const APattern &rhs) { *this = rhs; }
 APattern &APattern::operator=(const APattern &rhs) { (void)rhs; return *this; }
 
-const std::string &APattern::getType() const { return this->type; }
 const std::string &APattern::getTag() const { return this->tag; }
 APattern *APattern::setTag(std::string &tag) { this->tag = tag; return this; }
 APattern *APattern::setUseTrim(bool useTrim) { this->useTrim = useTrim; return this; }

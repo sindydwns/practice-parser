@@ -1,19 +1,20 @@
-#ifndef AParseResult_HPP
-#define AParseResult_HPP
+#ifndef ParseResult_HPP
+#define ParseResult_HPP
 
 #include <iostream>
 #include <vector>
 
-class AParseResult
+class ParseResult
 {
 public:
-    virtual std::string toString() const = 0;
-    virtual const std::vector<AParseResult*> &children() const = 0;
+    virtual ~ParseResult();
+
+    virtual std::string toString() const;
+    const std::vector<ParseResult*> &getChildren() const;
 
     template <typename T>
     std::vector<const T*> searchByType() const {
         std::vector<const T*> res;
-        const std::vector<AParseResult*> children = this->children();
         for (typename std::vector<const T*>::const_iterator it = children.begin(); it != children.end(); it++) {
             const T *child = dynamic_cast<T*>(*it);
             if (child != NULL) res.push_back(child);
@@ -28,7 +29,6 @@ public:
     template <typename T>
     std::vector<const T*> searchByTag(std::string tag) const {
         std::vector<const T*> res;
-        const std::vector<AParseResult*> children = this->children();
         for (typename std::vector<const T*>::const_iterator it = children.begin(); it != children.end(); it++) {
             const T *child = dynamic_cast<T*>(*it);
             if (child != NULL) res.push_back(child);
@@ -41,12 +41,17 @@ public:
     };
 
 protected:
-    AParseResult();
+    ParseResult();
+    ParseResult(std::string match);
+    ParseResult(std::vector<ParseResult*> children);
+    ParseResult(std::string match, std::vector<ParseResult*> children);
+
+    const std::string match;
+    const std::vector<ParseResult*> children;
 
 private:
-    AParseResult(const AParseResult &rhs);
-    virtual ~AParseResult();
-    AParseResult &operator=(const AParseResult &rhs);
+    ParseResult(const ParseResult &rhs);
+    ParseResult &operator=(const ParseResult &rhs);
 
 };
 

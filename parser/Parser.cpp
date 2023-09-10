@@ -17,7 +17,7 @@ Parser &Parser::operator=(const Parser &rhs)
     return *this;
 }
 
-AParseResult *Parser::parse(std::string str) const
+ParseResult *Parser::parse(std::string str) const
 {
     if (pattern == NULL) return NULL;
     std::stringstream ss(str);

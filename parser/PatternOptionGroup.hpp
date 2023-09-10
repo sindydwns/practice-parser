@@ -11,9 +11,21 @@ public:
     PatternOptionGroup();
     ~PatternOptionGroup();
 
-    virtual bool test(std::stringstream &ss) const;
-
+    virtual ParseResult *parse(std::stringstream &ss) const;
     PatternOptionGroup *addPattern(APattern *pattern);
+
+    class Result: public ParseResult
+    {
+    public:
+        Result(std::vector<ParseResult*> children);
+
+    private:
+        Result();
+        Result(const Result &rhs);
+        Result &operator=(const Result &rhs);
+        ~Result();
+
+    };
 
 private:
     PatternOptionGroup(const PatternOptionGroup &rhs);

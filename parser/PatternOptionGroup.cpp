@@ -1,26 +1,30 @@
 #include "PatternOptionGroup.hpp"
 
-PatternOptionGroup::PatternOptionGroup()
-    : APattern("PatternOptionGroup") { }
-PatternOptionGroup::PatternOptionGroup(const PatternOptionGroup &rhs)
-    : APattern("PatternOptionGroup") { *this = rhs; }
+PatternOptionGroup::PatternOptionGroup() { }
+PatternOptionGroup::PatternOptionGroup(const PatternOptionGroup &rhs) { *this = rhs; }
 PatternOptionGroup::~PatternOptionGroup()
 {
     // TODO delete patterns
 }
 PatternOptionGroup &PatternOptionGroup::operator=(const PatternOptionGroup &rhs) { (void)rhs; return *this; }
 
-bool PatternOptionGroup::test(std::stringstream &ss) const
+ParseResult *PatternOptionGroup::parse(std::stringstream &ss) const
 {
     std::streampos pos = ss.tellg();
+    std::vector<ParseResult*> children;
     for (size_t i = 0; i < this->patterns.size(); i++) {
-        if (patterns[i]->test(ss)) {
-            ss.seekg(pos);
-            return true;
+        ParseResult *child = patterns[i]->parse(ss);
+        if (child != NULL) {
+            children.push_back(child);
+            return new Result(children);
         }
         ss.seekg(pos);
     }
-    return false;
+    for (size_t i = 0; i < children.size(); i++) {
+        delete children[i];
+    }
+    ss.seekg(pos);
+    return NULL;
 }
 
 PatternOptionGroup *PatternOptionGroup::addPattern(APattern *pattern)
@@ -28,3 +32,12 @@ PatternOptionGroup *PatternOptionGroup::addPattern(APattern *pattern)
     this->patterns.push_back(pattern);
     return this;
 }
+
+
+// Result
+PatternOptionGroup::Result::Result() { }
+PatternOptionGroup::Result::Result(const PatternOptionGroup::Result &rhs) { *this = rhs; }
+PatternOptionGroup::Result::Result(std::vector<ParseResult*> children)
+    : ParseResult(children) { }
+PatternOptionGroup::Result &PatternOptionGroup::Result::operator=(const Result &rhs) { (void)rhs; return *this; }
+PatternOptionGroup::Result::~Result() { }
