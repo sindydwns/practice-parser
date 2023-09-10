@@ -20,6 +20,7 @@ public:
     {
     public:
         Result(std::vector<ParseResult*> children);
+        virtual std::string toString() const;
 
     private:
         Result();

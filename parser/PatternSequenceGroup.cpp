@@ -23,7 +23,6 @@ ParseResult *PatternSequenceGroup::parse(std::stringstream &ss) const
         }
         children.push_back(child);
     }
-    ss.seekg(pos);
     return new Result(children);
 }
 
@@ -40,3 +39,15 @@ PatternSequenceGroup::Result::Result(std::vector<ParseResult*> children)
 PatternSequenceGroup::Result::Result(const PatternSequenceGroup::Result &rhs) { *this = rhs; }
 PatternSequenceGroup::Result &PatternSequenceGroup::Result::operator=(const Result &rhs) { (void)rhs; return *this; }
 PatternSequenceGroup::Result::~Result() { }
+
+std::string PatternSequenceGroup::Result::toString() const
+{
+    std::string res;
+    res += "{ ";
+    for (size_t i = 0; i < this->children.size(); i++) {
+        if (i > 0) res += ", ";
+        res += children[i]->toString();
+    }
+    res += "}";
+    return res;
+}

@@ -27,13 +27,12 @@ protected:
     bool equal(const char c1, const char c2) const;
 
     std::string tag;
+    bool useTrim;
+    bool useIgnoreCase;
 
 private:
     APattern(const APattern &rhs);
     virtual APattern &operator=(const APattern &rhs);
-
-    bool useTrim;
-    bool useIgnoreCase;
 
 };
 

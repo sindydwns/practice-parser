@@ -21,8 +21,9 @@ ParseResult *PatternOptionGroup::parse(std::stringstream &ss) const
     for (size_t i = 0; i < this->patterns.size();) {
         ParseResult *child = patterns[i]->parse(ss);
         if (child != NULL) {
-            cursor = ss.tellg();
             children.push_back(child);
+            if (ss.eof()) break;
+            cursor = ss.tellg();
             i = 0;
         }
         else i++;
@@ -52,3 +53,15 @@ PatternOptionGroup::Result::Result(std::vector<ParseResult*> children)
     : ParseResult(children) { }
 PatternOptionGroup::Result &PatternOptionGroup::Result::operator=(const Result &rhs) { (void)rhs; return *this; }
 PatternOptionGroup::Result::~Result() { }
+
+std::string PatternOptionGroup::Result::toString() const
+{
+    std::string res;
+    res += "[ ";
+    for (size_t i = 0; i < this->children.size(); i++) {
+        if (i > 0) res += ", ";
+        res += children[i]->toString();
+    }
+    res += " ]";
+    return res;
+}

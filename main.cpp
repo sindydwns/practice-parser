@@ -27,8 +27,7 @@ int main(int argc, char **argv)
         Parser parser(
             (new PatternOptionGroup(1))
             ->addPattern((new PatternSequenceGroup())
-                ->addPattern(new PatternEqual("Host"))
-                ->addPattern(new PatternReadUntil(":"))
+                ->addPattern((new PatternReadUntil(":"))->setUseStrict(true))
                 ->addPattern(new PatternReadUntil("\r\n"))
             )
         );

@@ -6,11 +6,12 @@
 class PatternReadUntil: public APattern
 {
 public:
-    PatternReadUntil(const std::string str);
+    PatternReadUntil(const std::string suffix);
     ~PatternReadUntil();
 
     virtual ParseResult *parse(std::stringstream &ss) const;
     PatternReadUntil *setUseStrict(bool useStrict);
+    PatternReadUntil *setUseSuffix(bool useSuffix);
 
     class Result: public ParseResult
     {
@@ -32,6 +33,7 @@ private:
 
     std::string str;
     bool useStrict;
+    bool useSuffix;
     
 };
 
