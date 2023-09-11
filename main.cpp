@@ -13,14 +13,14 @@ void test()
 {
     std::string file;
 
-    file += "GET /index.html HTTP/1.1\r\n";
+    file += "GET /index.html HTTP/1.1\n";
     file += "Host: www.example.com\n";
     file += "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36\n";
     file += "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8\n";
     file += "Accept-Language: en-US,en;q=0.5\n";
     file += "Accept-Encoding: gzip, deflate\n";
-    file += "Connection: keep-alive\r\n";
-    file += "\r\n";
+    file += "Connection: keep-alive\n";
+    file += "\n";
     file += "body";
 
     PatternSequenceGroup *startline = new PatternSequenceGroup();
@@ -35,9 +35,9 @@ void test()
     PatternReadAll *body = new PatternReadAll();
     PatternSequenceGroup *req = new PatternSequenceGroup();
     req->addPattern(startline);
-    req->addPattern(new PatternEqual("\r\n"));
+    req->addPattern(new PatternEqual("\n"));
     req->addPattern(headers);
-    req->addPattern(new PatternEqual("\r\n"));
+    req->addPattern(new PatternEqual("\n"));
     req->addPattern(body);
 
     Parser parser(req);
@@ -56,6 +56,21 @@ int readFile(std::fstream &fs, std::string filename)
     return 0;
 }
 
+#include "ptr/Shared.hpp"
+void testSharedPtr()
+{
+    std::cout << std::endl << "--- init ---" << std::endl;
+    Shared<Parser> a = Shared<Parser>(new Parser(NULL));
+    Shared<Parser> b = Shared<Parser>(new Parser(NULL));
+    std::cout << std::endl << "--- block in ---" << std::endl;
+    {
+        Shared<Parser> c = a;
+        c = b;
+    }
+    std::cout << std::endl << "--- block out ---" << std::endl;
+    a.getInstance()->parse("");
+}
+
 void leakcheck()
 {
     system("leaks main");
@@ -64,6 +79,7 @@ void leakcheck()
 int main(int argc, char **argv)
 {
     atexit(leakcheck);
+    testSharedPtr();
     std::fstream in;
     if (argc != 2 || readFile(in, std::string(argv[1]))) {
         test();
@@ -79,7 +95,7 @@ int main(int argc, char **argv)
             (new PatternOptionGroup(1))
             ->addPattern((new PatternSequenceGroup())
                 ->addPattern((new PatternReadUntil(":")))
-                ->addPattern(new PatternReadUntil("\r\n"))
+                ->addPattern(new PatternReadUntil("\n"))
             )
         );
 
