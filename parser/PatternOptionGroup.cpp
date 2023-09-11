@@ -20,8 +20,13 @@ ParseResult *PatternOptionGroup::parse(std::stringstream &ss) const
     std::streampos pos = ss.tellg();
     if (pos == std::streampos(-1)) return NULL;
 
+
     std::streampos cursor = pos;
     std::vector<ParseResult*> children;
+    if (this->patterns.size() == 0) {
+        if (this->minMatch == 0) return new Result(children);
+        return NULL;
+    }
     for (size_t i = 0; i < this->patterns.size();) {
         ParseResult *child = patterns[i]->parse(ss);
         if (child != NULL) {

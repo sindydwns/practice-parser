@@ -14,6 +14,7 @@ ParseResult *PatternSequenceGroup::parse(std::stringstream &ss) const
 {
     std::streampos pos = ss.tellg();
     if (pos == std::streampos(-1)) return NULL;
+    if (this->patterns.size() == 0) return NULL;
 
     std::vector<ParseResult*> children;
     for (size_t i = 0; i < this->patterns.size(); i++) {
