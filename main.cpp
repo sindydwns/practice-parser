@@ -56,7 +56,7 @@ int readFile(std::fstream &fs, std::string filename)
     return 0;
 }
 
-#include "ptr/Shared.hpp"
+#include "util/Shared.hpp"
 void testSharedPtr()
 {
     std::cout << std::endl << "--- init ---" << std::endl;
