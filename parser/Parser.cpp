@@ -17,6 +17,13 @@ Parser &Parser::operator=(const Parser &rhs)
     return *this;
 }
 
+void Parser::setPattern(const APattern *pattern)
+{
+    if (this->pattern != NULL) delete this->pattern;
+    this->pattern = pattern;
+}
+
+
 ParseResult *Parser::parse(std::string str) const
 {
     if (pattern == NULL) return NULL;

@@ -79,7 +79,7 @@ void leakcheck()
 int main(int argc, char **argv)
 {
     atexit(leakcheck);
-    testSharedPtr();
+    // testSharedPtr();
     std::fstream in;
     if (argc != 2 || readFile(in, std::string(argv[1]))) {
         test();

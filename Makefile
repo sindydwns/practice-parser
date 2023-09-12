@@ -12,6 +12,7 @@ SRC = \
 	parser/PatternReadUntil.cpp \
 	parser/PatternWord.cpp \
 	parser/PatternReadAll.cpp \
+	parser/PatternSkipWs.cpp \
 	main.cpp
 .PHONY: all clean fclean re test
 
