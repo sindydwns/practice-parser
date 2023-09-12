@@ -41,12 +41,16 @@ void test()
     req->addPattern(body);
 
     Parser parser(req);
+    ParseCoroutine *routine = parser.makeCoroutine();
+    routine->setEof();
+    routine->next(file);
     ParseResult *res = parser.parse(file);
     if (res == NULL) std::cout << "( fail )" << std::endl;
     else {
         std::cout << res->toString() << std::endl;
         delete res;
     }
+    delete req;
 }
 
 int readFile(std::fstream &fs, std::string filename)

@@ -3,6 +3,7 @@ NAME = main
 
 CXXFLAGS = -std=c++98 -Wall -Wextra -Werror -MMD -MP -g3
 SRC = \
+	util/NotSupportException.cpp \
 	parser/Parser.cpp \
 	parser/ParseResult.cpp \
 	parser/APattern.cpp \

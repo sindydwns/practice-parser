@@ -19,7 +19,7 @@ public:
     class Result: public ParseResult
     {
     public:
-        Result(std::vector<ParseResult*> children);
+        Result(std::vector<ParseResult> children);
         virtual std::string toString() const;
 
     private:

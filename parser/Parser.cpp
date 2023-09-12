@@ -23,6 +23,11 @@ void Parser::setPattern(const APattern *pattern)
     this->pattern = pattern;
 }
 
+ParseCoroutine *Parser::makeCoroutine()
+{
+    if (this->pattern == NULL) return NULL;
+    return new ParseCoroutine(this->pattern);
+}
 
 ParseResult *Parser::parse(std::string str) const
 {
