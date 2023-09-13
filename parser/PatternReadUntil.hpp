@@ -12,19 +12,6 @@ public:
     virtual ParseStream::State compile(ParseStream &ps) const;
     PatternReadUntil *setUseSuffix(bool useSuffix);
 
-    class Result: public ParseResult
-    {
-    public:
-        Result(std::string match);
-
-    private:
-        Result();
-        Result(const Result &rhs);
-        Result &operator=(const Result &rhs);
-        ~Result();
-
-    };
-
 private:
     PatternReadUntil();
     PatternReadUntil(const PatternReadUntil &rhs);

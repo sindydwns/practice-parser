@@ -11,19 +11,6 @@ public:
 
     virtual ParseStream::State compile(ParseStream &ps) const;
 
-    class Result: public ParseResult
-    {
-    public:
-        Result(std::string match);
-
-    private:
-        Result();
-        Result(const Result &rhs);
-        Result &operator=(const Result &rhs);
-        ~Result();
-
-    };
-
 private:
     PatternEqual();
     PatternEqual(const PatternEqual &rhs);

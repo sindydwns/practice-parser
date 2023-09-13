@@ -11,18 +11,6 @@ public:
 
     virtual ParseStream::State compile(ParseStream &ps) const;
 
-    class Result: public ParseResult
-    {
-    public:
-        Result();
-
-    private:
-        Result(const Result &rhs);
-        Result &operator=(const Result &rhs);
-        ~Result();
-
-    };
-
 private:
     PatternSkipWs(const PatternSkipWs &rhs);
     PatternSkipWs &operator=(const PatternSkipWs &rhs);

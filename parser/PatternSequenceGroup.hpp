@@ -14,20 +14,6 @@ public:
     virtual ParseStream::State compile(ParseStream &ps) const;
     PatternSequenceGroup *addPattern(APattern *pattern);
 
-    class Result: public ParseResult
-    {
-    public:
-        Result(std::vector<ParseResult*> children);
-        virtual std::string toString() const;
-
-    private:
-        Result();
-        Result(const Result &rhs);
-        Result &operator=(const Result &rhs);
-        ~Result();
-
-    };
-
 private:
     PatternSequenceGroup(const PatternSequenceGroup &rhs);
     PatternSequenceGroup &operator=(const PatternSequenceGroup &rhs);
