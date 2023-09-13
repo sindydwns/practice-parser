@@ -9,7 +9,7 @@ public:
     PatternReadUntil(const std::string suffix);
     ~PatternReadUntil();
 
-    virtual ParseResult *parse(std::stringstream &ss) const;
+    virtual ParseStream::State compile(ParseStream &ps) const;
     PatternReadUntil *setUseSuffix(bool useSuffix);
 
     class Result: public ParseResult

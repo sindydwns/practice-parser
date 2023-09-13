@@ -23,19 +23,8 @@ void Parser::setPattern(const APattern *pattern)
     this->pattern = pattern;
 }
 
-ParseCoroutine *Parser::makeCoroutine()
+ParseStream Parser::makeStream()
 {
-    if (this->pattern == NULL) return NULL;
-    return new ParseCoroutine(this->pattern);
-}
-
-ParseResult *Parser::parse(std::string str) const
-{
-    if (pattern == NULL) return NULL;
-    std::stringstream ss(str);
-    ss << std::noskipws;
-    ParseResult *res = this->pattern->parse(ss);
-    if (ss.eof()) return res;
-    delete res;
-    return NULL;
+    if (this->pattern == NULL) return ParseStream();
+    return ParseStream(this->pattern);
 }

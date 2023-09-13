@@ -10,6 +10,10 @@ PatternSequenceGroup::~PatternSequenceGroup()
 }
 PatternSequenceGroup &PatternSequenceGroup::operator=(const PatternSequenceGroup &rhs) { (void)rhs; return *this; }
 
+ParseStream::State PatternSequenceGroup::compile(ParseStream &ps) const
+{
+    return nullptr;
+}
 ParseResult *PatternSequenceGroup::parse(std::stringstream &ss) const
 {
     std::streampos pos = ss.tellg();

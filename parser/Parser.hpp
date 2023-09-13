@@ -3,7 +3,7 @@
 
 #include <sstream>
 #include "APattern.hpp"
-#include "ParseCoroutine.hpp"
+#include "ParseStream.hpp"
 #include "ParseResult.hpp"
 
 class Parser
@@ -15,8 +15,7 @@ public:
     Parser &operator=(const Parser &rhs);
 
     void setPattern(const APattern *pattern);
-    ParseCoroutine *makeCoroutine();
-    ParseResult *parse(std::string str) const;
+    ParseStream makeStream();
 
 private:
     Parser();

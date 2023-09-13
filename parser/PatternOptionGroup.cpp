@@ -15,6 +15,10 @@ PatternOptionGroup::~PatternOptionGroup()
 }
 PatternOptionGroup &PatternOptionGroup::operator=(const PatternOptionGroup &rhs) { (void)rhs; return *this; }
 
+ParseStream::State PatternOptionGroup::compile(ParseStream &ps) const
+{
+    return false;
+}
 ParseResult *PatternOptionGroup::parse(std::stringstream &ss) const
 {
     std::streampos pos = ss.tellg();

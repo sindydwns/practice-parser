@@ -8,6 +8,26 @@ PatternEqual::~PatternEqual() {}
 PatternEqual::PatternEqual(const PatternEqual &rhs) { *this = rhs; }
 PatternEqual &PatternEqual::operator=(const PatternEqual &rhs) { (void)rhs; return *this; }
 
+ParseStream::State PatternEqual::compile(ParseStream &ps) const
+{
+    std::string buffer;
+    if (ps.yieldStackSize() != 0) buffer = ps.yieldContinue(this);
+
+    std::streampos pos = ps.tellg();
+    if (str.empty())                 return ps.yieldReturn(ParseStream::State::VALID, this);
+    if (ps.fail() && ps.isUserEoF()) return ps.yieldReturn(ParseStream::State::INVALID, this);
+    if (ps.fail())                   return ps.yieldReturn(ParseStream::State::PENDING, buffer, this);
+
+    char c;
+    while (buffer.size() < this->str.size()) {
+        ps >> c;
+        if (ps.fail() && ps.isUserEoF()) return ps.yieldReturn(ParseStream::State::INVALID, this);
+        // 리턴하기 전에 ps 상태 clear로 정리해주어야 함.
+        // 그렇다면 위에서도 했어야 하는거 아닌가?
+    }
+
+    return false;
+}
 ParseResult *PatternEqual::parse(std::stringstream &ss) const
 {
     std::string buffer(this->str);

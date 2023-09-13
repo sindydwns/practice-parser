@@ -11,7 +11,7 @@ public:
     PatternSequenceGroup();
     ~PatternSequenceGroup();
 
-    virtual ParseResult *parse(std::stringstream &ss) const;
+    virtual ParseStream::State compile(ParseStream &ps) const;
     PatternSequenceGroup *addPattern(APattern *pattern);
 
     class Result: public ParseResult

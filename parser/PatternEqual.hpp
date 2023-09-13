@@ -9,7 +9,7 @@ public:
     PatternEqual(const std::string str);
     ~PatternEqual();
 
-    virtual ParseResult *parse(std::stringstream &ss) const;
+    virtual ParseStream::State compile(ParseStream &ps) const;
 
     class Result: public ParseResult
     {

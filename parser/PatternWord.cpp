@@ -11,6 +11,10 @@ PatternWord &PatternWord::operator=(const PatternWord &rhs)
     return *this;
 }
 
+ParseStream::State PatternWord::compile(ParseStream &ps) const
+{
+    return nullptr;
+}
 ParseResult *PatternWord::parse(std::stringstream &ss) const
 {
     if (ss.eof()) return NULL;

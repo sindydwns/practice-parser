@@ -13,7 +13,7 @@ public:
     PatternOptionGroup(size_t minMatch, size_t maxMatch);
     ~PatternOptionGroup();
 
-    virtual ParseResult *parse(std::stringstream &ss) const;
+    virtual ParseStream::State compile(ParseStream &ps) const;
     PatternOptionGroup *addPattern(APattern *pattern);
 
     class Result: public ParseResult

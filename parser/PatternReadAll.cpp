@@ -11,6 +11,10 @@ PatternReadAll &PatternReadAll::operator=(const PatternReadAll &rhs)
     return *this;
 }
 
+ParseStream::State PatternReadAll::compile(ParseStream &ps) const
+{
+    return false;
+}
 ParseResult *PatternReadAll::parse(std::stringstream &ss) const
 {
     std::string str;

@@ -4,6 +4,7 @@
 #include <vector>
 #include <sstream>
 #include "ParseResult.hpp"
+#include "ParseStream.hpp"
 
 class APattern
 {
@@ -11,7 +12,7 @@ public:
     virtual ~APattern();
 
     const std::string &getTag() const;
-    virtual ParseResult *parse(std::stringstream &ss) const = 0;
+    virtual ParseStream::State compile(ParseStream &ps) const = 0;
     APattern *setTag(std::string &tag);
     APattern *setUseTrim(bool useTrim);
     APattern *setUseIgnoreCase(bool useIgnoreCase);

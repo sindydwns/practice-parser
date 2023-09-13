@@ -11,6 +11,10 @@ PatternSkipWs &PatternSkipWs::operator=(const PatternSkipWs &rhs)
     return *this;
 }
 
+ParseStream::State PatternSkipWs::compile(ParseStream &ps) const
+{
+    return false;
+}
 ParseResult *PatternSkipWs::parse(std::stringstream &ss) const
 {
     if (ss.eof() == false) ss >> std::ws; 

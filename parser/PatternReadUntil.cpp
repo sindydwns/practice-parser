@@ -9,6 +9,10 @@ PatternReadUntil::PatternReadUntil(const PatternReadUntil &rhs) { *this = rhs; }
 PatternReadUntil::~PatternReadUntil() {}
 PatternReadUntil &PatternReadUntil::operator=(const PatternReadUntil &rhs) { (void)rhs; return *this; }
 
+ParseStream::State PatternReadUntil::compile(ParseStream &ps) const
+{
+    return false;
+}
 ParseResult *PatternReadUntil::parse(std::stringstream &ss) const
 {
     if (this->str.empty()) return NULL;

@@ -41,16 +41,12 @@ void test()
     req->addPattern(body);
 
     Parser parser(req);
-    ParseCoroutine *routine = parser.makeCoroutine();
-    routine->setEof();
-    routine->next(file);
-    ParseResult *res = parser.parse(file);
-    if (res == NULL) std::cout << "( fail )" << std::endl;
-    else {
-        std::cout << res->toString() << std::endl;
-        delete res;
-    }
-    delete req;
+    ParseStream stream = parser.makeStream();
+    stream.setUserEoF();
+    stream.next(file);
+    ParseResult res = stream.getResult();
+    if (stream.isState(ParseStream::State::INVALID)) std::cout << "( fail )" << std::endl;
+    else std::cout << res.toString() << std::endl;
 }
 
 int readFile(std::fstream &fs, std::string filename)
@@ -72,7 +68,6 @@ void testSharedPtr()
         c = b;
     }
     std::cout << std::endl << "--- block out ---" << std::endl;
-    a.getInstance()->parse("");
 }
 
 void leakcheck()
@@ -90,25 +85,25 @@ int main(int argc, char **argv)
         return 0;
     }
 
-    std::cout << "--------------------------" << std::endl;
-    std::string line;
-    while (std::getline(in, line)) {
-        std::cout << line << std::endl;
+    // std::cout << "--------------------------" << std::endl;
+    // std::string line;
+    // while (std::getline(in, line)) {
+    //     std::cout << line << std::endl;
 
-        Parser parser(
-            (new PatternOptionGroup(1))
-            ->addPattern((new PatternSequenceGroup())
-                ->addPattern((new PatternReadUntil(":")))
-                ->addPattern(new PatternReadUntil("\n"))
-            )
-        );
+    //     Parser parser(
+    //         (new PatternOptionGroup(1))
+    //         ->addPattern((new PatternSequenceGroup())
+    //             ->addPattern((new PatternReadUntil(":")))
+    //             ->addPattern(new PatternReadUntil("\n"))
+    //         )
+    //     );
 
-        ParseResult *res = parser.parse(line);
-        if (res == NULL) std::cout << "> ( null )" << std::endl;
-        else {
-            std::cout << "> " << res->toString() << std::endl;
-            delete res;
-        }
-    }
+    //     ParseResult *res = parser.parse(line);
+    //     if (res == NULL) std::cout << "> ( null )" << std::endl;
+    //     else {
+    //         std::cout << "> " << res->toString() << std::endl;
+    //         delete res;
+    //     }
+    // }
     return 0;
 }
