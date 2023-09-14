@@ -23,8 +23,8 @@ ParseStream::CompileResult PatternReadAll::compile(ParseStream &ps) const
     char c;
     while (true) {
         ps >> c;
-        if (ps.fail() && ps.isStreamEoF()) return ps.drop(pos, data);
-        if (ps.fail()) return ps.yield(data);
+        if (ps.fail() && ps.isStreamEoF() == false) return ps.yield(data);
+        if (ps.fail()) return ps.done(data->buffer, data);
         data->buffer.push_back(c);
     }
     return ps.done(APattern::trim(data->buffer, this->useTrim), data);
