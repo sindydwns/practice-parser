@@ -38,4 +38,4 @@ PatternSequenceGroup *PatternSequenceGroup::addPattern(APattern *pattern)
     return this;
 }
 
-PatternSequenceGroup::Data::Data() { }
+PatternSequenceGroup::Data::Data() : searchIdx(0) { }

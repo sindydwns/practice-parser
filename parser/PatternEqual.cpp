@@ -26,6 +26,7 @@ ParseStream::CompileResult PatternEqual::compile(ParseStream &ps) const
             return ps.drop(pos, data);
         }
         if (ps.fail()) return ps.yield(data);
+        data->buffer.push_back(c);
     }
 
     if (APattern::equal(data->buffer, this->str)) {

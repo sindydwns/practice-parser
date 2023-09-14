@@ -4,17 +4,17 @@
 ParseStream::ParseStream() : 
     pattern(NULL),
     streamEoF(false),
-    state(INIT) { }
+    state(INIT) { *this >> std::noskipws; }
 
 ParseStream::ParseStream(const ParseStream &rhs) :
     pattern(rhs.pattern),
     streamEoF(rhs.streamEoF),
-    state(rhs.state) { }
+    state(rhs.state) { *this >> std::noskipws; }
 
 ParseStream::ParseStream(const APattern *pattern) :
     pattern(pattern),
     streamEoF(false),
-    state(INIT) { }
+    state(INIT) { *this >> std::noskipws; }
 
 ParseStream::~ParseStream() { }
 ParseStream &ParseStream::operator=(const ParseStream &rhs)
@@ -86,6 +86,8 @@ ParseStream::CompileResult ParseStream::drop(std::streampos &pos, IData *deleteT
 bool ParseStream::next(std::string &str) {
     *this << str;
     CompileResult res = pattern->compile(*this);
+    this->state = res.state;
+    this->result = res.result;
     return res.state != INVALID;
 }
 ParseResult &ParseStream::getResult() { return result; }
