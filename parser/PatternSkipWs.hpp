@@ -9,7 +9,13 @@ public:
     PatternSkipWs();
     ~PatternSkipWs();
 
-    virtual ParseStream::State compile(ParseStream &ps) const;
+    virtual ParseStream::CompileResult compile(ParseStream &ps) const;
+
+    struct Data : IData
+    {
+        Data();
+        std::string buffer;
+    };
 
 private:
     PatternSkipWs(const PatternSkipWs &rhs);

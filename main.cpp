@@ -42,7 +42,7 @@ void test()
 
     Parser parser(req);
     ParseStream stream = parser.makeStream();
-    stream.setUserEoF();
+    stream.turnOnStreamEoF();
     stream.next(file);
     ParseResult res = stream.getResult();
     if (stream.isState(ParseStream::State::INVALID)) std::cout << "( fail )" << std::endl;

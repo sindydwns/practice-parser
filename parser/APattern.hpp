@@ -12,7 +12,7 @@ public:
     virtual ~APattern();
 
     const std::string &getTag() const;
-    virtual ParseStream::State compile(ParseStream &ps) const = 0;
+    virtual ParseStream::CompileResult compile(ParseStream &ps) const = 0;
     APattern *setTag(std::string &tag);
     APattern *setUseTrim(bool useTrim);
     APattern *setUseIgnoreCase(bool useIgnoreCase);
@@ -21,7 +21,7 @@ protected:
     APattern();
     APattern(bool useTrim, bool useIgnoreCase);
 
-    static std::string trim(const std::string &str);
+    static std::string trim(const std::string &str, bool b);
     static std::string toupper(const std::string &str);
     static std::string tolower(const std::string &str);
     bool equal(const std::string &str1, const std::string &str2) const;

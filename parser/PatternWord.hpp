@@ -9,7 +9,15 @@ public:
     PatternWord();
     ~PatternWord();
 
-    virtual ParseStream::State compile(ParseStream &ps) const;
+    virtual ParseStream::CompileResult compile(ParseStream &ps) const;
+
+    struct Data : IData
+    {
+        Data();
+        std::string buffer;
+        std::string ws;
+        bool modeSkipWs;
+    };
 
 private:
     PatternWord(const PatternWord &rhs);

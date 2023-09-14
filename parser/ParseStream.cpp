@@ -3,17 +3,17 @@
 
 ParseStream::ParseStream() : 
     pattern(NULL),
-    userEoF(false),
+    streamEoF(false),
     state(State::INIT) { }
 
 ParseStream::ParseStream(const ParseStream &rhs) :
     pattern(rhs.pattern),
-    userEoF(rhs.userEoF),
+    streamEoF(rhs.streamEoF),
     state(rhs.state) { }
 
 ParseStream::ParseStream(const APattern *pattern) :
     pattern(pattern),
-    userEoF(false),
+    streamEoF(false),
     state(State::INIT) { }
 
 ParseStream::~ParseStream() { }
@@ -25,40 +25,68 @@ ParseStream &ParseStream::operator=(const ParseStream &rhs)
     return *this;
 }
 
-bool ParseStream::isUserEoF() const { return this->userEoF; }
+bool ParseStream::isStreamEoF() const { return this->streamEoF; }
 bool ParseStream::isState(State s) const { return state == s; }
-void ParseStream::setUserEoF() { this->userEoF = true; }
+void ParseStream::turnOnStreamEoF() { this->streamEoF = true; }
 void ParseStream::init()
 {
     this->clear();
     this->str("");
     result = ParseResult();
-    this->userEoF = false;
+    this->streamEoF = false;
     this->state = State::INIT;
 }
 
-ParseStream::State ParseStream::yieldReturn(State s, const APattern *p)
+IData *ParseStream::load()
 {
-    std::string str;
-    return yieldReturn(s, str, p);
+    if (this->indexer.size() == 0) return NULL;
+    IData *data = this->indexer.top();
+    this->indexer.pop();
+    return data;
 }
 
-ParseStream::State ParseStream::yieldReturn(State s, std::string &buffer, const APattern *p)
+ParseStream::CompileResult ParseStream::yield(IData *data)
 {
     this->clear();
-    if (s == State::PENDING) this->indexer.push(idxPair(p, buffer));
-    return s;
+    this->indexer.push(data);
+    return CompileResult(PENDING);
 }
 
-size_t ParseStream::yieldStackSize() { return indexer.size(); }
-
-std::string ParseStream::yieldContinue(const APattern *p)
+ParseStream::CompileResult ParseStream::yield(IData *data, std::streampos &pos)
 {
-    const idxPair &pair = this->indexer.top();
-    if (pair.first != p) throw std::logic_error("yield continue pattern not match");
-    this->indexer.pop();
-    return pair.second;
+    this->clear();
+    this->seekg(pos);
+    this->indexer.push(data);
+    return CompileResult(PENDING);
+}
+
+ParseStream::CompileResult ParseStream::done(IData *deleteTarget)
+{
+    this->clear();
+    delete deleteTarget;
+    return CompileResult(VALID_NO_RES);
+}
+
+
+ParseStream::CompileResult ParseStream::done(ParseResult res, IData *deleteTarget)
+{
+    this->clear();
+    delete deleteTarget;
+    return CompileResult(VALID, res);
+}
+
+ParseStream::CompileResult ParseStream::drop(std::streampos &pos, IData *deleteTarget)
+{
+    this->clear();
+    this->seekg(pos);
+    delete deleteTarget;
+    return CompileResult(INVALID);
 }
 
 bool ParseStream::next(std::string &str) { return this->state != State::INVALID; }
 ParseResult &ParseStream::getResult() { return result; }
+
+ParseStream::CompileResult::CompileResult(State state)
+    : state(state) { }
+ParseStream::CompileResult::CompileResult(State state, ParseResult result)
+    : state(state), result(result) { }

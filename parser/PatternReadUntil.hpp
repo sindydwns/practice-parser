@@ -9,8 +9,15 @@ public:
     PatternReadUntil(const std::string suffix);
     ~PatternReadUntil();
 
-    virtual ParseStream::State compile(ParseStream &ps) const;
+    virtual ParseStream::CompileResult compile(ParseStream &ps) const;
     PatternReadUntil *setUseSuffix(bool useSuffix);
+
+    struct Data : IData
+    {
+        Data();
+        std::string buffer;
+        size_t matchIdx;
+    };
 
 private:
     PatternReadUntil();

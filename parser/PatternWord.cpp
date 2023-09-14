@@ -11,44 +11,47 @@ PatternWord &PatternWord::operator=(const PatternWord &rhs)
     return *this;
 }
 
-ParseStream::State PatternWord::compile(ParseStream &ps) const
+ParseStream::CompileResult PatternWord::compile(ParseStream &ps) const
 {
-    return nullptr;
-}
-ParseResult *PatternWord::parse(std::stringstream &ss) const
-{
-    if (ss.eof()) return NULL;
+    Data *data = dynamic_cast<Data*>(ps.load());
+    if (data == NULL) data = new Data();
 
-    std::streampos pos = ss.tellg();
-    if (pos == std::streampos(-1)) return NULL;
+    std::streampos pos = ps.tellg();
+    if (ps.fail() && ps.isStreamEoF()) return ps.drop(pos, data);
+    if (ps.fail()) return ps.yield(data);
 
-    std::string ws;
     char c;
-    while (true) {
-        ss >> c;
-        if (ss.fail()) {
-            ss.clear();
-            ss.seekg(pos);
-            return NULL;
+    while (data->modeSkipWs) {
+        ps >> c;
+        if (ps.fail() && ps.isStreamEoF()) {
+            delete data;
+            return ps.drop(pos, data);
         }
-        if (std::isspace(c)) ws.push_back(c);
+        if (ps.fail()) return ps.yield(data);
+        if (std::isspace(c)) data->ws.push_back(c);
         else {
-            ss.unget();
+            ps.unget();
+            data->modeSkipWs = false;
+        }
+    }
+
+    while (true) {
+        ps >> c;
+        if (ps.fail() && ps.isStreamEoF()) {
+            delete data;
+            return ps.drop(pos, data);
+        }
+        if (ps.fail()) return ps.yield(data);
+        if (std::isspace(c) == false) data->buffer.push_back(c);
+        else {
+            ps.unget();
             break;
         }
     }
 
-    std::string str;
-    ss >> str;
-    if (this->useTrim) return new Result(str);
-    return new Result(ws + str);
+    if (data->buffer.empty()) return ps.drop(pos, data);
+    if (this->useTrim) return ps.done(data->buffer, data);
+    return ps.done(data->ws + data->buffer, data);
 }
 
-// Result
-PatternWord::Result::Result() { }
-PatternWord::Result::Result(const PatternWord::Result &rhs) { *this = rhs; }
-PatternWord::Result::Result(std::string str)
-    : ParseResult(str) { }
-PatternWord::Result &PatternWord::Result::operator=(const Result &rhs) { (void)rhs; return *this; }
-PatternWord::Result::~Result() { }
-
+PatternWord::Data::Data() : modeSkipWs(true) { }

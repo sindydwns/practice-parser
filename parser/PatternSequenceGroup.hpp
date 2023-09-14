@@ -11,8 +11,15 @@ public:
     PatternSequenceGroup();
     ~PatternSequenceGroup();
 
-    virtual ParseStream::State compile(ParseStream &ps) const;
+    virtual ParseStream::CompileResult compile(ParseStream &ps) const;
     PatternSequenceGroup *addPattern(APattern *pattern);
+
+    struct Data : IData
+    {
+        Data();
+        size_t searchIdx;
+        std::vector<ParseResult> children;
+    };
 
 private:
     PatternSequenceGroup(const PatternSequenceGroup &rhs);

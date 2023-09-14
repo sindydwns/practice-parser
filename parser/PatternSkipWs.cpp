@@ -11,19 +11,15 @@ PatternSkipWs &PatternSkipWs::operator=(const PatternSkipWs &rhs)
     return *this;
 }
 
-ParseStream::State PatternSkipWs::compile(ParseStream &ps) const
+ParseStream::CompileResult PatternSkipWs::compile(ParseStream &ps) const
 {
-    return false;
-}
-ParseResult *PatternSkipWs::parse(std::stringstream &ss) const
-{
-    if (ss.eof() == false) ss >> std::ws; 
-    return new Result();
+    ps.load();
+
+    ps >> std::ws;
+
+    if (ps.eof() == false) return ps.done(NULL);
+    if (ps.isStreamEoF()) return ps.yield(NULL);
+    return ps.done(NULL);
 }
 
-// Result
-PatternSkipWs::Result::Result() { }
-PatternSkipWs::Result::Result(const PatternSkipWs::Result &rhs) { *this = rhs; }
-PatternSkipWs::Result &PatternSkipWs::Result::operator=(const Result &rhs) { (void)rhs; return *this; }
-PatternSkipWs::Result::~Result() { }
-
+PatternSkipWs::Data::Data() { }

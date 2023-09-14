@@ -9,7 +9,13 @@ public:
     PatternReadAll();
     ~PatternReadAll();
 
-    virtual ParseStream::State compile(ParseStream &ps) const;
+    virtual ParseStream::CompileResult compile(ParseStream &ps) const;
+
+    struct Data : IData
+    {
+        Data();
+        std::string buffer;
+    };
 
 private:
     PatternReadAll(const PatternReadAll &rhs);

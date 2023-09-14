@@ -4,6 +4,7 @@
 #include <sstream>
 #include <stack>
 #include <algorithm>
+#include "IData.hpp"
 #include "ParseResult.hpp"
 
 class APattern;
@@ -20,29 +21,38 @@ public:
         INIT = 0,
         PENDING = 1,
         INVALID = 2,
-        VALID = 3
+        VALID = 3,
+        VALID_NO_RES = 4,
     } State;
 
-    bool isUserEoF() const;
+    struct CompileResult
+    {
+        CompileResult(State state);
+        CompileResult(State state, ParseResult result);
+        State state;
+        ParseResult result;
+    };
+
+    bool isStreamEoF() const;
     bool isState(State s) const;
-    void setUserEoF();
+    void turnOnStreamEoF();
     void init();
-    State yieldReturn(State s, const APattern *p);
-    State yieldReturn(State s, std::string &buffer, const APattern *p);
-    size_t yieldStackSize();
-    std::string yieldContinue(const APattern *p);
+    IData *load();
+    CompileResult yield(IData *data);
+    CompileResult yield(IData *data, std::streampos &pos);
+    CompileResult done(IData *deleteTarget);
+    CompileResult done(ParseResult res, IData *deleteTarget);
+    CompileResult drop(std::streampos &pos, IData *deleteTarget);
 
     bool next(std::string &str);
     ParseResult &getResult();
 
 private:
-    typedef std::pair<const APattern*, std::string> idxPair;
-
-    std::stack<idxPair> indexer;
+    std::stack<IData*> indexer;
     const APattern *const pattern;
     ParseResult result;
 
-    bool userEoF;
+    bool streamEoF;
 
     State state;
 

@@ -9,7 +9,13 @@ public:
     PatternEqual(const std::string str);
     ~PatternEqual();
 
-    virtual ParseStream::State compile(ParseStream &ps) const;
+    virtual ParseStream::CompileResult compile(ParseStream &ps) const;
+
+    struct Data : IData
+    {
+        Data();
+        std::string buffer;
+    };
 
 private:
     PatternEqual();

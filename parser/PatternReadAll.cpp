@@ -11,30 +11,26 @@ PatternReadAll &PatternReadAll::operator=(const PatternReadAll &rhs)
     return *this;
 }
 
-ParseStream::State PatternReadAll::compile(ParseStream &ps) const
+ParseStream::CompileResult PatternReadAll::compile(ParseStream &ps) const
 {
-    return false;
-}
-ParseResult *PatternReadAll::parse(std::stringstream &ss) const
-{
-    std::string str;
+    Data *data = dynamic_cast<Data*>(ps.load());
+    if (data == NULL) data = new Data();
+
+    std::streampos pos = ps.tellg();
+    if (ps.fail() && ps.isStreamEoF()) return ps.drop(pos, data);
+    if (ps.fail()) return ps.yield(data);
+
     char c;
     while (true) {
-        ss >> c;
-        if (ss.fail()) break;
-        str.push_back(c);
+        ps >> c;
+        if (ps.fail() && ps.isStreamEoF()) {
+            delete data;
+            return ps.drop(pos, data);
+        }
+        if (ps.fail()) return ps.yield(data);
+        data->buffer.push_back(c);
     }
-
-    if (this->useTrim) return new Result(APattern::trim(str));
-    return new Result(str);
-    
+    return ps.done(APattern::trim(data->buffer, this->useTrim), data);
 }
 
-// Result
-PatternReadAll::Result::Result() { }
-PatternReadAll::Result::Result(const PatternReadAll::Result &rhs) { *this = rhs; }
-PatternReadAll::Result::Result(std::string str)
-    : ParseResult(str) { }
-PatternReadAll::Result &PatternReadAll::Result::operator=(const Result &rhs) { (void)rhs; return *this; }
-PatternReadAll::Result::~Result() { }
-
+PatternReadAll::Data::Data() { }

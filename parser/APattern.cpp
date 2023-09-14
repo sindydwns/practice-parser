@@ -12,8 +12,9 @@ APattern *APattern::setTag(std::string &tag) { this->tag = tag; return this; }
 APattern *APattern::setUseTrim(bool useTrim) { this->useTrim = useTrim; return this; }
 APattern *APattern::setUseIgnoreCase(bool useIgnoreCase) { this->useIgnoreCase = useIgnoreCase; return this; }
 
-std::string APattern::trim(const std::string &str)
+std::string APattern::trim(const std::string &str, bool b)
 {
+    if (b == false) return str;
     std::string::const_iterator begin = str.begin();
     std::string::const_iterator end = str.end();
     for (; begin != str.end(); begin++) {

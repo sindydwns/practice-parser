@@ -15,41 +15,41 @@ PatternOptionGroup::~PatternOptionGroup()
 }
 PatternOptionGroup &PatternOptionGroup::operator=(const PatternOptionGroup &rhs) { (void)rhs; return *this; }
 
-ParseStream::State PatternOptionGroup::compile(ParseStream &ps) const
+ParseStream::CompileResult PatternOptionGroup::compile(ParseStream &ps) const
 {
-    return false;
-}
-ParseResult *PatternOptionGroup::parse(std::stringstream &ss) const
-{
-    std::streampos pos = ss.tellg();
-    if (pos == std::streampos(-1)) return NULL;
+    Data *data = dynamic_cast<Data*>(ps.load());
+    if (data == NULL) data = new Data();
 
+    std::streampos pos = ps.tellg(); // TODO: 이거 코루틴 구조체에 저장해야 함. 다른 부분도 마찬가지
+    if (ps.fail() && ps.isStreamEoF()) return ps.drop(pos, data);
+    if (ps.fail()) return ps.yield(data);
 
-    std::streampos cursor = pos;
-    std::vector<ParseResult*> children;
+    if (data->cursor == std::streampos(-1)) data->cursor = pos;
     if (this->patterns.size() == 0) {
-        if (this->minMatch == 0) return new Result(children);
-        return NULL;
+        if (this->minMatch == 0) return ps.done(ParseResult(data->children), data);
+        return ps.drop(pos, data);
     }
-    for (size_t i = 0; i < this->patterns.size();) {
-        ParseResult *child = patterns[i]->parse(ss);
-        if (child != NULL) {
-            children.push_back(child);
-            cursor = ss.tellg();
-            if (ss.fail()) break;
-            i = 0;
+    while (data->searchIdx < this->patterns.size()) {
+        ParseStream::CompileResult res = patterns[data->searchIdx]->compile(ps);
+        if (res.state == ParseStream::State::PENDING) return ps.yield(data);
+        if (res.state == ParseStream::State::VALID) {
+            data->children.push_back(res.result);
+            data->cursor = ps.tellg();
+            data->searchIdx = 0;
         }
-        else i++;
-        ss.seekg(cursor);
-    }
-    if (children.size() < minMatch || children.size() > maxMatch) {
-        for (size_t i = 0; i < children.size(); i++) {
-            delete children[i];
+        if (res.state == ParseStream::State::VALID_NO_RES) {
+            data->cursor = ps.tellg();
+            data->searchIdx = 0;
         }
-        ss.seekg(pos);
-        return NULL;
+        if (res.state == ParseStream::State::INVALID) {
+            data->searchIdx++;
+        }
+        ps.seekg(data->cursor);
     }
-    return new Result(children);
+    if (data->children.size() < minMatch || data->children.size() > maxMatch) {
+        return ps.drop(pos, data);
+    }
+    return ps.done(ParseResult(data->children), data);
 }
 
 PatternOptionGroup *PatternOptionGroup::addPattern(APattern *pattern)
@@ -58,23 +58,4 @@ PatternOptionGroup *PatternOptionGroup::addPattern(APattern *pattern)
     return this;
 }
 
-
-// Result
-PatternOptionGroup::Result::Result() { }
-PatternOptionGroup::Result::Result(const PatternOptionGroup::Result &rhs) { *this = rhs; }
-PatternOptionGroup::Result::Result(std::vector<ParseResult*> children)
-    : ParseResult(children) { }
-PatternOptionGroup::Result &PatternOptionGroup::Result::operator=(const Result &rhs) { (void)rhs; return *this; }
-PatternOptionGroup::Result::~Result() { }
-
-std::string PatternOptionGroup::Result::toString() const
-{
-    std::string res;
-    res += "[ ";
-    for (size_t i = 0; i < this->children.size(); i++) {
-        if (i > 0) res += ", ";
-        res += children[i]->toString();
-    }
-    res += " ]";
-    return res;
-}
+PatternOptionGroup::Data::Data() : cursor(std::streampos(-1)), searchIdx(0) { }

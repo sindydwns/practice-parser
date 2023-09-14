@@ -13,8 +13,16 @@ public:
     PatternOptionGroup(size_t minMatch, size_t maxMatch);
     ~PatternOptionGroup();
 
-    virtual ParseStream::State compile(ParseStream &ps) const;
+    virtual ParseStream::CompileResult compile(ParseStream &ps) const;
     PatternOptionGroup *addPattern(APattern *pattern);
+
+    struct Data : IData
+    {
+        Data();
+        std::streampos cursor;
+        size_t searchIdx;
+        std::vector<ParseResult> children;
+    };
 
 private:
     PatternOptionGroup(const PatternOptionGroup &rhs);

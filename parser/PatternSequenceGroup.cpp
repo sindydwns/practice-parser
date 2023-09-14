@@ -10,29 +10,26 @@ PatternSequenceGroup::~PatternSequenceGroup()
 }
 PatternSequenceGroup &PatternSequenceGroup::operator=(const PatternSequenceGroup &rhs) { (void)rhs; return *this; }
 
-ParseStream::State PatternSequenceGroup::compile(ParseStream &ps) const
+ParseStream::CompileResult PatternSequenceGroup::compile(ParseStream &ps) const
 {
-    return nullptr;
-}
-ParseResult *PatternSequenceGroup::parse(std::stringstream &ss) const
-{
-    std::streampos pos = ss.tellg();
-    if (pos == std::streampos(-1)) return NULL;
-    if (this->patterns.size() == 0) return NULL;
+    Data *data = dynamic_cast<Data*>(ps.load());
+    if (data == NULL) data = new Data();
 
-    std::vector<ParseResult*> children;
-    for (size_t i = 0; i < this->patterns.size(); i++) {
-        ParseResult *child = patterns[i]->parse(ss);
-        if (child == NULL) {
-            ss.seekg(pos);
-            for (size_t k = 0; k < children.size(); k++) {
-                delete children[k];
-            }
-            return NULL;
+    std::streampos pos = ps.tellg(); // TODO: 이거 코루틴 구조체에 저장해야 함. 다른 부분도 마찬가지
+    if (ps.fail() && ps.isStreamEoF()) return ps.drop(pos, data);
+    if (ps.fail()) return ps.yield(data);
+
+    if (this->patterns.size() == 0) return ps.drop(pos, data);
+    while (data->searchIdx < this->patterns.size()) {
+        ParseStream::CompileResult res = patterns[data->searchIdx]->compile(ps);
+        if (res.state == ParseStream::State::PENDING) return ps.yield(data);
+        if (res.state == ParseStream::State::VALID) {
+            data->children.push_back(res.result);
         }
-        children.push_back(child);
+        if (res.state == ParseStream::State::INVALID) return ps.drop(pos, data);
+        data->searchIdx++;
     }
-    return new Result(children);
+    return ps.done(ParseResult(data->children), data);
 }
 
 PatternSequenceGroup *PatternSequenceGroup::addPattern(APattern *pattern)
@@ -41,22 +38,4 @@ PatternSequenceGroup *PatternSequenceGroup::addPattern(APattern *pattern)
     return this;
 }
 
-// Result
-PatternSequenceGroup::Result::Result() { }
-PatternSequenceGroup::Result::Result(std::vector<ParseResult*> children)
-    : ParseResult(children) { }
-PatternSequenceGroup::Result::Result(const PatternSequenceGroup::Result &rhs) { *this = rhs; }
-PatternSequenceGroup::Result &PatternSequenceGroup::Result::operator=(const Result &rhs) { (void)rhs; return *this; }
-PatternSequenceGroup::Result::~Result() { }
-
-std::string PatternSequenceGroup::Result::toString() const
-{
-    std::string res;
-    res += "{ ";
-    for (size_t i = 0; i < this->children.size(); i++) {
-        if (i > 0) res += ", ";
-        res += children[i]->toString();
-    }
-    res += "}";
-    return res;
-}
+PatternSequenceGroup::Data::Data() { }

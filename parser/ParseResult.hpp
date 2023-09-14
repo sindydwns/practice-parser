@@ -20,9 +20,9 @@ public:
     const std::vector<ParseResult> &getChildren() const;
 
 private:
-    const std::string tag;
-    const std::string match;
-    const std::vector<ParseResult> children;
+    std::string tag;
+    std::string match;
+    std::vector<ParseResult> children;
 
 };
 
