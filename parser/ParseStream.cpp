@@ -83,7 +83,11 @@ ParseStream::CompileResult ParseStream::drop(std::streampos &pos, IData *deleteT
     return CompileResult(INVALID);
 }
 
-bool ParseStream::next(std::string &str) { return this->state != INVALID; }
+bool ParseStream::next(std::string &str) {
+    *this << str;
+    CompileResult res = pattern->compile(*this);
+    return res.state != INVALID;
+}
 ParseResult &ParseStream::getResult() { return result; }
 
 ParseStream::CompileResult::CompileResult(ParseState state)
