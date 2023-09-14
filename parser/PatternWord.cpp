@@ -23,10 +23,7 @@ ParseStream::CompileResult PatternWord::compile(ParseStream &ps) const
     char c;
     while (data->modeSkipWs) {
         ps >> c;
-        if (ps.fail() && ps.isStreamEoF()) {
-            delete data;
-            return ps.drop(pos, data);
-        }
+        if (ps.fail() && ps.isStreamEoF()) return ps.drop(pos, data);
         if (ps.fail()) return ps.yield(data);
         if (std::isspace(c)) data->ws.push_back(c);
         else {
@@ -37,10 +34,7 @@ ParseStream::CompileResult PatternWord::compile(ParseStream &ps) const
 
     while (true) {
         ps >> c;
-        if (ps.fail() && ps.isStreamEoF()) {
-            delete data;
-            return ps.drop(pos, data);
-        }
+        if (ps.fail() && ps.isStreamEoF()) return ps.drop(pos, data);
         if (ps.fail()) return ps.yield(data);
         if (std::isspace(c) == false) data->buffer.push_back(c);
         else {

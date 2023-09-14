@@ -21,10 +21,7 @@ ParseStream::CompileResult PatternEqual::compile(ParseStream &ps) const
     char c;
     while (data->buffer.size() < this->str.size()) {
         ps >> c;
-        if (ps.fail() && ps.isStreamEoF()) {
-            delete data;
-            return ps.drop(pos, data);
-        }
+        if (ps.fail() && ps.isStreamEoF()) return ps.drop(pos, data);
         if (ps.fail()) return ps.yield(data);
         data->buffer.push_back(c);
     }

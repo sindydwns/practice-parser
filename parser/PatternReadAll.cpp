@@ -23,10 +23,7 @@ ParseStream::CompileResult PatternReadAll::compile(ParseStream &ps) const
     char c;
     while (true) {
         ps >> c;
-        if (ps.fail() && ps.isStreamEoF()) {
-            delete data;
-            return ps.drop(pos, data);
-        }
+        if (ps.fail() && ps.isStreamEoF()) return ps.drop(pos, data);
         if (ps.fail()) return ps.yield(data);
         data->buffer.push_back(c);
     }
