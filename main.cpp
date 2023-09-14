@@ -45,7 +45,7 @@ void test()
     stream.turnOnStreamEoF();
     stream.next(file);
     ParseResult res = stream.getResult();
-    if (stream.isState(ParseStream::State::INVALID)) std::cout << "( fail )" << std::endl;
+    if (stream.isState(INVALID)) std::cout << "( fail )" << std::endl;
     else std::cout << res.toString() << std::endl;
 }
 

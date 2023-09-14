@@ -4,7 +4,7 @@
 ParseStream::ParseStream() : 
     pattern(NULL),
     streamEoF(false),
-    state(State::INIT) { }
+    state(INIT) { }
 
 ParseStream::ParseStream(const ParseStream &rhs) :
     pattern(rhs.pattern),
@@ -14,7 +14,7 @@ ParseStream::ParseStream(const ParseStream &rhs) :
 ParseStream::ParseStream(const APattern *pattern) :
     pattern(pattern),
     streamEoF(false),
-    state(State::INIT) { }
+    state(INIT) { }
 
 ParseStream::~ParseStream() { }
 ParseStream &ParseStream::operator=(const ParseStream &rhs)
@@ -26,7 +26,7 @@ ParseStream &ParseStream::operator=(const ParseStream &rhs)
 }
 
 bool ParseStream::isStreamEoF() const { return this->streamEoF; }
-bool ParseStream::isState(State s) const { return state == s; }
+bool ParseStream::isState(ParseState s) const { return state == s; }
 void ParseStream::turnOnStreamEoF() { this->streamEoF = true; }
 void ParseStream::init()
 {
@@ -34,7 +34,7 @@ void ParseStream::init()
     this->str("");
     result = ParseResult();
     this->streamEoF = false;
-    this->state = State::INIT;
+    this->state = INIT;
 }
 
 IData *ParseStream::load()
@@ -83,10 +83,10 @@ ParseStream::CompileResult ParseStream::drop(std::streampos &pos, IData *deleteT
     return CompileResult(INVALID);
 }
 
-bool ParseStream::next(std::string &str) { return this->state != State::INVALID; }
+bool ParseStream::next(std::string &str) { return this->state != INVALID; }
 ParseResult &ParseStream::getResult() { return result; }
 
-ParseStream::CompileResult::CompileResult(State state)
+ParseStream::CompileResult::CompileResult(ParseState state)
     : state(state) { }
-ParseStream::CompileResult::CompileResult(State state, ParseResult result)
+ParseStream::CompileResult::CompileResult(ParseState state, ParseResult result)
     : state(state), result(result) { }

@@ -8,6 +8,13 @@
 #include "ParseResult.hpp"
 
 class APattern;
+typedef enum e_state {
+    INIT = 0,
+    PENDING = 1,
+    INVALID = 2,
+    VALID = 3,
+    VALID_NO_RES = 4,
+} ParseState;
 class ParseStream : public std::stringstream
 {
 public:
@@ -17,24 +24,16 @@ public:
     ~ParseStream();
     ParseStream &operator=(const ParseStream &rhs);
 
-    typedef enum e_state {
-        INIT = 0,
-        PENDING = 1,
-        INVALID = 2,
-        VALID = 3,
-        VALID_NO_RES = 4,
-    } State;
-
     struct CompileResult
     {
-        CompileResult(State state);
-        CompileResult(State state, ParseResult result);
-        State state;
+        CompileResult(ParseState state);
+        CompileResult(ParseState state, ParseResult result);
+        ParseState state;
         ParseResult result;
     };
 
     bool isStreamEoF() const;
-    bool isState(State s) const;
+    bool isState(ParseState s) const;
     void turnOnStreamEoF();
     void init();
     IData *load();
@@ -54,7 +53,7 @@ private:
 
     bool streamEoF;
 
-    State state;
+    ParseState state;
 
 };
 

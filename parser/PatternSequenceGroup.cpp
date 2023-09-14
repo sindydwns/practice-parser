@@ -22,11 +22,11 @@ ParseStream::CompileResult PatternSequenceGroup::compile(ParseStream &ps) const
     if (this->patterns.size() == 0) return ps.drop(pos, data);
     while (data->searchIdx < this->patterns.size()) {
         ParseStream::CompileResult res = patterns[data->searchIdx]->compile(ps);
-        if (res.state == ParseStream::State::PENDING) return ps.yield(data);
-        if (res.state == ParseStream::State::VALID) {
+        if (res.state == PENDING) return ps.yield(data);
+        if (res.state == VALID) {
             data->children.push_back(res.result);
         }
-        if (res.state == ParseStream::State::INVALID) return ps.drop(pos, data);
+        if (res.state == INVALID) return ps.drop(pos, data);
         data->searchIdx++;
     }
     return ps.done(ParseResult(data->children), data);

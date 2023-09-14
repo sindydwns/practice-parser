@@ -31,17 +31,17 @@ ParseStream::CompileResult PatternOptionGroup::compile(ParseStream &ps) const
     }
     while (data->searchIdx < this->patterns.size()) {
         ParseStream::CompileResult res = patterns[data->searchIdx]->compile(ps);
-        if (res.state == ParseStream::State::PENDING) return ps.yield(data);
-        if (res.state == ParseStream::State::VALID) {
+        if (res.state == PENDING) return ps.yield(data);
+        if (res.state == VALID) {
             data->children.push_back(res.result);
             data->cursor = ps.tellg();
             data->searchIdx = 0;
         }
-        if (res.state == ParseStream::State::VALID_NO_RES) {
+        if (res.state == VALID_NO_RES) {
             data->cursor = ps.tellg();
             data->searchIdx = 0;
         }
-        if (res.state == ParseStream::State::INVALID) {
+        if (res.state == INVALID) {
             data->searchIdx++;
         }
         ps.seekg(data->cursor);
