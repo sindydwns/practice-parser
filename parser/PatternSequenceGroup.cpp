@@ -1,6 +1,7 @@
 #include "PatternSequenceGroup.hpp"
 
 PatternSequenceGroup::PatternSequenceGroup() { }
+PatternSequenceGroup::PatternSequenceGroup(const std::string tag) { setTag(tag); }
 PatternSequenceGroup::PatternSequenceGroup(const PatternSequenceGroup &rhs) { *this = rhs; }
 PatternSequenceGroup::~PatternSequenceGroup()
 {
@@ -29,7 +30,7 @@ ParseStream::CompileResult PatternSequenceGroup::compile(ParseStream &ps) const
         if (res.state == INVALID) return ps.drop(pos, data);
         data->searchIdx++;
     }
-    return ps.done(ParseResult(data->children), data);
+    return ps.done(ParseResult(data->children, tag), data);
 }
 
 PatternSequenceGroup *PatternSequenceGroup::addPattern(APattern *pattern)

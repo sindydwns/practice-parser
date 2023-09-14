@@ -23,21 +23,21 @@ void test()
     file += "\n";
     file += "body";
 
-    PatternSequenceGroup *startline = new PatternSequenceGroup();
-    startline->addPattern(new PatternWord());
-    startline->addPattern(new PatternWord());
-    startline->addPattern(new PatternWord());
-    PatternSequenceGroup *header = new PatternSequenceGroup();
-    header->addPattern(new PatternReadUntil(":"));
-    header->addPattern(new PatternReadUntil("\n"));
-    PatternOptionGroup *headers = new PatternOptionGroup(0, 999);
+    PatternSequenceGroup *startline = new PatternSequenceGroup("startline");
+    startline->addPattern(new PatternWord("method"));
+    startline->addPattern(new PatternWord("route"));
+    startline->addPattern(new PatternWord("http-version"));
+    PatternSequenceGroup *header = new PatternSequenceGroup("header");
+    header->addPattern(new PatternReadUntil(":", "key"));
+    header->addPattern(new PatternReadUntil("\n", "value"));
+    PatternOptionGroup *headers = new PatternOptionGroup(0, 999, "headers");
     headers->addPattern(header);
-    PatternReadAll *body = new PatternReadAll();
-    PatternSequenceGroup *req = new PatternSequenceGroup();
+    PatternReadAll *body = new PatternReadAll("body");
+    PatternSequenceGroup *req = new PatternSequenceGroup("req");
     req->addPattern(startline);
-    req->addPattern(new PatternEqual("\n"));
+    req->addPattern(new PatternEqual("\n", "nextline"));
     req->addPattern(headers);
-    req->addPattern(new PatternEqual("\n"));
+    req->addPattern(new PatternEqual("\n", "nextline"));
     req->addPattern(body);
 
     Parser parser(req);
@@ -77,7 +77,7 @@ void leakcheck()
 
 int main(int argc, char **argv)
 {
-    atexit(leakcheck);
+    // atexit(leakcheck);
     // testSharedPtr();
     std::fstream in;
     if (argc != 2 || readFile(in, std::string(argv[1]))) {

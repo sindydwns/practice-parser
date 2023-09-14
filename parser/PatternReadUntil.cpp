@@ -5,6 +5,8 @@ PatternReadUntil::PatternReadUntil()
     : APattern(true, false), useSuffix(false) { throw std::logic_error("must string has value"); }
 PatternReadUntil::PatternReadUntil(const std::string str)
     : APattern(true, false), str(str), useSuffix(false)  { if (str.empty()) throw std::logic_error("must string has value"); }
+PatternReadUntil::PatternReadUntil(const std::string suffix, const std::string tag)
+    : APattern(true, false), str(suffix), useSuffix(false) { setTag(tag); }
 PatternReadUntil::PatternReadUntil(const PatternReadUntil &rhs) { *this = rhs; }
 PatternReadUntil::~PatternReadUntil() {}
 PatternReadUntil &PatternReadUntil::operator=(const PatternReadUntil &rhs) { (void)rhs; return *this; }
@@ -35,7 +37,8 @@ ParseStream::CompileResult PatternReadUntil::compile(ParseStream &ps) const
     if (data->matchIdx < this->str.size()) return ps.drop(pos, data);
 
     data->buffer = std::string(data->buffer.begin(), data->buffer.end() - this->str.size());
-    return ps.done(APattern::trim(data->buffer, this->useTrim), data);
+    std::string buffer = APattern::trim(data->buffer, this->useTrim);
+    return ps.done(ParseResult(buffer, tag), data);
 }
 
 PatternReadUntil *PatternReadUntil::setUseSuffix(bool useSuffix) { this->useSuffix = useSuffix; return this; }

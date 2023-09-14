@@ -2,6 +2,8 @@
 
 PatternSkipWs::PatternSkipWs()
     : APattern(true, false) { }
+PatternSkipWs::PatternSkipWs(const std::string tag)
+    : APattern(true, false) { setTag(tag); }
 PatternSkipWs::PatternSkipWs(const PatternSkipWs &rhs)
     : APattern(true, false) { *this = rhs; }
 PatternSkipWs::~PatternSkipWs() { }

@@ -13,7 +13,7 @@ public:
 
     const std::string &getTag() const;
     virtual ParseStream::CompileResult compile(ParseStream &ps) const = 0;
-    APattern *setTag(std::string &tag);
+    APattern *setTag(const std::string &tag);
     APattern *setUseTrim(bool useTrim);
     APattern *setUseIgnoreCase(bool useIgnoreCase);
 

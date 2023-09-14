@@ -5,6 +5,12 @@ PatternEqual::PatternEqual()
     : APattern(true, false) { throw std::logic_error("must string has value"); }
 PatternEqual::PatternEqual(const std::string str)
     : APattern(true, false), str(str) { if (str.empty()) throw std::logic_error("must string has value"); }
+PatternEqual::PatternEqual(const std::string str, const std::string tag)
+    : APattern(true, false), str(str)
+{
+    if (str.empty()) throw std::logic_error("must string has value");
+    setTag(tag);
+}
 PatternEqual::~PatternEqual() {}
 PatternEqual::PatternEqual(const PatternEqual &rhs) { *this = rhs; }
 PatternEqual &PatternEqual::operator=(const PatternEqual &rhs) { (void)rhs; return *this; }
@@ -27,7 +33,8 @@ ParseStream::CompileResult PatternEqual::compile(ParseStream &ps) const
     }
 
     if (APattern::equal(data->buffer, this->str)) {
-        return ps.done(APattern::trim(data->buffer, this->useTrim), data);
+        ParseResult res = ParseResult(APattern::trim(data->buffer, this->useTrim), tag);
+        return ps.done(res, data);
     }
     return ps.drop(pos, data);
 }

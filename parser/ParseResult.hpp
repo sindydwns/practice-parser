@@ -10,8 +10,11 @@ class ParseResult
 public:
     ParseResult();
     ParseResult(std::string match);
+    ParseResult(std::string match, const std::string tag);
     ParseResult(std::vector<ParseResult> children);
+    ParseResult(std::vector<ParseResult> children, const std::string tag);
     ParseResult(std::string match, std::vector<ParseResult> children);
+    ParseResult(std::string match, std::vector<ParseResult> children, const std::string tag);
     ParseResult(const ParseResult &rhs);
     virtual ~ParseResult();
     ParseResult &operator=(const ParseResult &rhs);

@@ -7,6 +7,7 @@ class PatternSkipWs: public APattern
 {
 public:
     PatternSkipWs();
+    PatternSkipWs(const std::string tag);
     ~PatternSkipWs();
 
     virtual ParseStream::CompileResult compile(ParseStream &ps) const;

@@ -7,6 +7,7 @@ class PatternReadUntil: public APattern
 {
 public:
     PatternReadUntil(const std::string suffix);
+    PatternReadUntil(const std::string suffix, const std::string tag);
     ~PatternReadUntil();
 
     virtual ParseStream::CompileResult compile(ParseStream &ps) const;

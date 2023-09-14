@@ -2,6 +2,8 @@
 
 PatternWord::PatternWord()
     : APattern(true, false) { }
+PatternWord::PatternWord(const std::string tag)
+    : APattern(true, false) { setTag(tag); }
 PatternWord::PatternWord(const PatternWord &rhs)
     : APattern(true, false) { *this = rhs; }
 PatternWord::~PatternWord() { }
@@ -44,8 +46,8 @@ ParseStream::CompileResult PatternWord::compile(ParseStream &ps) const
     }
 
     if (data->buffer.empty()) return ps.drop(pos, data);
-    if (this->useTrim) return ps.done(data->buffer, data);
-    return ps.done(data->ws + data->buffer, data);
+    if (this->useTrim) return ps.done(ParseResult(data->buffer, tag), data);
+    return ps.done(ParseResult(data->ws + data->buffer, tag), data);
 }
 
 PatternWord::Data::Data() : modeSkipWs(true) { }

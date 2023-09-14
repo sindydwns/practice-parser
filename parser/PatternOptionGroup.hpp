@@ -10,7 +10,9 @@ class PatternOptionGroup: public APattern
 public:
     PatternOptionGroup();
     PatternOptionGroup(size_t minMatch);
+    PatternOptionGroup(size_t minMatch, const std::string tag);
     PatternOptionGroup(size_t minMatch, size_t maxMatch);
+    PatternOptionGroup(size_t minMatch, size_t maxMatch, const std::string tag);
     ~PatternOptionGroup();
 
     virtual ParseStream::CompileResult compile(ParseStream &ps) const;

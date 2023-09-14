@@ -8,7 +8,7 @@ APattern::APattern(const APattern &rhs) { *this = rhs; }
 APattern &APattern::operator=(const APattern &rhs) { (void)rhs; return *this; }
 
 const std::string &APattern::getTag() const { return this->tag; }
-APattern *APattern::setTag(std::string &tag) { this->tag = tag; return this; }
+APattern *APattern::setTag(const std::string &tag) { this->tag = tag; return this; }
 APattern *APattern::setUseTrim(bool useTrim) { this->useTrim = useTrim; return this; }
 APattern *APattern::setUseIgnoreCase(bool useIgnoreCase) { this->useIgnoreCase = useIgnoreCase; return this; }
 

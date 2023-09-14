@@ -2,6 +2,8 @@
 
 PatternReadAll::PatternReadAll()
     : APattern(false, false) { }
+PatternReadAll::PatternReadAll(const std::string tag)
+    : APattern(false, false) { setTag(tag); }
 PatternReadAll::PatternReadAll(const PatternReadAll &rhs)
     : APattern(false, false) { *this = rhs; }
 PatternReadAll::~PatternReadAll() { }
@@ -24,10 +26,11 @@ ParseStream::CompileResult PatternReadAll::compile(ParseStream &ps) const
     while (true) {
         ps >> c;
         if (ps.fail() && ps.isStreamEoF() == false) return ps.yield(data);
-        if (ps.fail()) return ps.done(data->buffer, data);
+        if (ps.fail()) return ps.done(ParseResult(data->buffer, tag), data);
         data->buffer.push_back(c);
     }
-    return ps.done(APattern::trim(data->buffer, this->useTrim), data);
+    std::string buffer = APattern::trim(data->buffer, this->useTrim);
+    return ps.done(ParseResult(buffer, tag), data);
 }
 
 PatternReadAll::Data::Data() { }

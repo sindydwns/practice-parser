@@ -1,14 +1,20 @@
 #include "ParseResult.hpp"
 
-ParseResult::ParseResult() { }
+ParseResult::ParseResult() {}
 ParseResult::ParseResult(std::string match)
-    : match(match) { }
+    : match(match) {}
+ParseResult::ParseResult(std::string match, const std::string tag)
+    : tag(tag), match(match) {}
 ParseResult::ParseResult(std::vector<ParseResult> children)
-    : children(children) { }
+    : children(children) {}
+ParseResult::ParseResult(std::vector<ParseResult> children, const std::string tag)
+    : tag(tag), children(children) {}
 ParseResult::ParseResult(std::string match, std::vector<ParseResult> children)
-    : match(match), children(children) { }
+    : match(match), children(children) {}
+ParseResult::ParseResult(std::string match, std::vector<ParseResult> children, const std::string tag)
+    : tag(tag), match(match), children(children) {}
 ParseResult::ParseResult(const ParseResult &rhs)
-    : match(rhs.match), children(rhs.children) { }
+    : tag(rhs.tag), match(rhs.match), children(rhs.children) {}
 ParseResult::~ParseResult() { }
 ParseResult &ParseResult::operator=(const ParseResult &rhs)
 {

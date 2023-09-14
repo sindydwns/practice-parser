@@ -7,6 +7,7 @@ class PatternWord: public APattern
 {
 public:
     PatternWord();
+    PatternWord(const std::string tag);
     ~PatternWord();
 
     virtual ParseStream::CompileResult compile(ParseStream &ps) const;

@@ -9,6 +9,7 @@ class PatternSequenceGroup: public APattern
 {
 public:
     PatternSequenceGroup();
+    PatternSequenceGroup(const std::string tag);
     ~PatternSequenceGroup();
 
     virtual ParseStream::CompileResult compile(ParseStream &ps) const;

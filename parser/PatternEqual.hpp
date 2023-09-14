@@ -7,6 +7,7 @@ class PatternEqual: public APattern
 {
 public:
     PatternEqual(const std::string str);
+    PatternEqual(const std::string str, const std::string tag);
     ~PatternEqual();
 
     virtual ParseStream::CompileResult compile(ParseStream &ps) const;

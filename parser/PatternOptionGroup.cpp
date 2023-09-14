@@ -4,8 +4,20 @@ PatternOptionGroup::PatternOptionGroup()
     : minMatch(0), maxMatch(1) { }
 PatternOptionGroup::PatternOptionGroup(size_t minMatch)
     : minMatch(minMatch), maxMatch(1) { maxMatch = minMatch > maxMatch ? minMatch: maxMatch; }
+PatternOptionGroup::PatternOptionGroup(size_t minMatch, const std::string tag)
+    : minMatch(minMatch), maxMatch(1)
+{
+    maxMatch = minMatch > maxMatch ? minMatch: maxMatch;
+    setTag(tag);
+}
 PatternOptionGroup::PatternOptionGroup(size_t minMatch, size_t maxMatch)
-    : minMatch(minMatch), maxMatch(maxMatch) { maxMatch = minMatch > maxMatch ? minMatch: maxMatch; }
+    : minMatch(minMatch), maxMatch(maxMatch) { maxMatch = minMatch > maxMatch ? minMatch : maxMatch; }
+PatternOptionGroup::PatternOptionGroup(size_t minMatch, size_t maxMatch, const std::string tag)
+    : minMatch(minMatch), maxMatch(maxMatch)
+{
+    maxMatch = minMatch > maxMatch ? minMatch: maxMatch;
+    setTag(tag);
+}
 PatternOptionGroup::PatternOptionGroup(const PatternOptionGroup &rhs) { *this = rhs; }
 PatternOptionGroup::~PatternOptionGroup()
 {
@@ -26,7 +38,7 @@ ParseStream::CompileResult PatternOptionGroup::compile(ParseStream &ps) const
 
     if (data->cursor == std::streampos(-1)) data->cursor = pos;
     if (this->patterns.size() == 0) {
-        if (this->minMatch == 0) return ps.done(ParseResult(data->children), data);
+        if (this->minMatch == 0) return ps.done(ParseResult(data->children, tag), data);
         return ps.drop(pos, data);
     }
     while (data->searchIdx < this->patterns.size()) {
@@ -49,7 +61,7 @@ ParseStream::CompileResult PatternOptionGroup::compile(ParseStream &ps) const
     if (data->children.size() < minMatch || data->children.size() > maxMatch) {
         return ps.drop(pos, data);
     }
-    return ps.done(ParseResult(data->children), data);
+    return ps.done(ParseResult(data->children, tag), data);
 }
 
 PatternOptionGroup *PatternOptionGroup::addPattern(APattern *pattern)

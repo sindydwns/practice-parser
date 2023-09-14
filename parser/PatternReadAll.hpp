@@ -7,6 +7,7 @@ class PatternReadAll: public APattern
 {
 public:
     PatternReadAll();
+    PatternReadAll(const std::string tag);
     ~PatternReadAll();
 
     virtual ParseStream::CompileResult compile(ParseStream &ps) const;
