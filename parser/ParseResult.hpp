@@ -13,7 +13,7 @@ public:
     ParseResult(std::vector<ParseResult> children);
     ParseResult(std::string match, std::vector<ParseResult> children);
     ParseResult(const ParseResult &rhs);
-    ~ParseResult();
+    virtual ~ParseResult();
     ParseResult &operator=(const ParseResult &rhs);
 
     virtual std::string toString() const;
