@@ -21,6 +21,7 @@ public:
     struct Data : IData
     {
         Data();
+        std::streampos start;
         std::streampos cursor;
         size_t searchIdx;
         std::vector<ParseResult> children;

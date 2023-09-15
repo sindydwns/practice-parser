@@ -16,18 +16,20 @@ ParseStream::CompileResult PatternSequenceGroup::compile(ParseStream &ps) const
     Data *data = dynamic_cast<Data*>(ps.load());
     if (data == NULL) data = new Data();
 
-    std::streampos pos = ps.tellg(); // TODO: 이거 코루틴 구조체에 저장해야 함. 다른 부분도 마찬가지
-    if (ps.fail() && ps.isStreamEoF()) return ps.drop(pos, data);
-    if (ps.fail()) return ps.yield(data);
+    if (data->start == std::streampos(-1)) {
+        data->start = ps.tellg();
+        if (ps.fail() && ps.isStreamEoF()) return ps.drop(data);
+        if (ps.fail()) return ps.yield(data);
+    }
 
-    if (this->patterns.size() == 0) return ps.drop(pos, data);
+    if (this->patterns.size() == 0) return ps.drop(data->start, data);
     while (data->searchIdx < this->patterns.size()) {
         ParseStream::CompileResult res = patterns[data->searchIdx]->compile(ps);
         if (res.state == PENDING) return ps.yield(data);
         if (res.state == VALID) {
             data->children.push_back(res.result);
         }
-        if (res.state == INVALID) return ps.drop(pos, data);
+        if (res.state == INVALID) return ps.drop(data->start, data);
         data->searchIdx++;
     }
     return ps.done(ParseResult(data->children, tag), data);

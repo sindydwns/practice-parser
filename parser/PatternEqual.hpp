@@ -15,6 +15,7 @@ public:
     struct Data : IData
     {
         Data();
+        std::streampos start;
         std::string buffer;
     };
 

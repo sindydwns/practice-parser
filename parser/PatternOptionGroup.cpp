@@ -32,14 +32,16 @@ ParseStream::CompileResult PatternOptionGroup::compile(ParseStream &ps) const
     Data *data = dynamic_cast<Data*>(ps.load());
     if (data == NULL) data = new Data();
 
-    std::streampos pos = ps.tellg(); // TODO: 이거 코루틴 구조체에 저장해야 함. 다른 부분도 마찬가지
-    if (ps.fail() && ps.isStreamEoF()) return ps.drop(pos, data);
-    if (ps.fail()) return ps.yield(data);
+    if (data->start == std::streampos(-1)) {
+        data->start = ps.tellg();
+        if (ps.fail() && ps.isStreamEoF()) return ps.drop(data);
+        if (ps.fail()) return ps.yield(data);
+    }
 
-    if (data->cursor == std::streampos(-1)) data->cursor = pos;
+    if (data->cursor == std::streampos(-1)) data->cursor = data->start;
     if (this->patterns.size() == 0) {
         if (this->minMatch == 0) return ps.done(ParseResult(data->children, tag), data);
-        return ps.drop(pos, data);
+        return ps.drop(data->start, data);
     }
     while (data->searchIdx < this->patterns.size()) {
         ParseStream::CompileResult res = patterns[data->searchIdx]->compile(ps);
@@ -59,7 +61,7 @@ ParseStream::CompileResult PatternOptionGroup::compile(ParseStream &ps) const
         ps.seekg(data->cursor);
     }
     if (data->children.size() < minMatch || data->children.size() > maxMatch) {
-        return ps.drop(pos, data);
+        return ps.drop(data->start, data);
     }
     return ps.done(ParseResult(data->children, tag), data);
 }
@@ -70,4 +72,5 @@ PatternOptionGroup *PatternOptionGroup::addPattern(APattern *pattern)
     return this;
 }
 
-PatternOptionGroup::Data::Data() : cursor(std::streampos(-1)), searchIdx(0) { }
+PatternOptionGroup::Data::Data() 
+    : start(std::streampos(-1)), cursor(std::streampos(-1)), searchIdx(0) { }

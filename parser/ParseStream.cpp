@@ -75,6 +75,13 @@ ParseStream::CompileResult ParseStream::done(ParseResult res, IData *deleteTarge
     return CompileResult(VALID, res);
 }
 
+ParseStream::CompileResult ParseStream::drop(IData *deleteTarget)
+{
+    this->clear();
+    delete deleteTarget;
+    return CompileResult(INVALID);
+}
+
 ParseStream::CompileResult ParseStream::drop(std::streampos &pos, IData *deleteTarget)
 {
     this->clear();

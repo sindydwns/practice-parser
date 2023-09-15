@@ -18,14 +18,16 @@ ParseStream::CompileResult PatternWord::compile(ParseStream &ps) const
     Data *data = dynamic_cast<Data*>(ps.load());
     if (data == NULL) data = new Data();
 
-    std::streampos pos = ps.tellg();
-    if (ps.fail() && ps.isStreamEoF()) return ps.drop(pos, data);
-    if (ps.fail()) return ps.yield(data);
+    if (data->start == std::streampos(-1)) {
+        data->start = ps.tellg();
+        if (ps.fail() && ps.isStreamEoF()) return ps.drop(data);
+        if (ps.fail()) return ps.yield(data);
+    }
 
     char c;
     while (data->modeSkipWs) {
         ps >> c;
-        if (ps.fail() && ps.isStreamEoF()) return ps.drop(pos, data);
+        if (ps.fail() && ps.isStreamEoF()) return ps.drop(data->start, data);
         if (ps.fail()) return ps.yield(data);
         if (std::isspace(c)) data->ws.push_back(c);
         else {
@@ -36,7 +38,7 @@ ParseStream::CompileResult PatternWord::compile(ParseStream &ps) const
 
     while (true) {
         ps >> c;
-        if (ps.fail() && ps.isStreamEoF()) return ps.drop(pos, data);
+        if (ps.fail() && ps.isStreamEoF()) return ps.drop(data->start, data);
         if (ps.fail()) return ps.yield(data);
         if (std::isspace(c) == false) data->buffer.push_back(c);
         else {
@@ -45,7 +47,7 @@ ParseStream::CompileResult PatternWord::compile(ParseStream &ps) const
         }
     }
 
-    if (data->buffer.empty()) return ps.drop(pos, data);
+    if (data->buffer.empty()) return ps.drop(data->start, data);
     if (this->useTrim) return ps.done(ParseResult(data->buffer, tag), data);
     return ps.done(ParseResult(data->ws + data->buffer, tag), data);
 }

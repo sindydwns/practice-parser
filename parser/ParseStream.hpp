@@ -41,6 +41,7 @@ public:
     CompileResult yield(IData *data, std::streampos &pos);
     CompileResult done(IData *deleteTarget);
     CompileResult done(ParseResult res, IData *deleteTarget);
+    CompileResult drop(IData *deleteTarget);
     CompileResult drop(std::streampos &pos, IData *deleteTarget);
 
     bool next(std::string &str);

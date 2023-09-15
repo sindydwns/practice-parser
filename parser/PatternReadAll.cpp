@@ -18,10 +18,6 @@ ParseStream::CompileResult PatternReadAll::compile(ParseStream &ps) const
     Data *data = dynamic_cast<Data*>(ps.load());
     if (data == NULL) data = new Data();
 
-    std::streampos pos = ps.tellg();
-    if (ps.fail() && ps.isStreamEoF()) return ps.drop(pos, data);
-    if (ps.fail()) return ps.yield(data);
-
     char c;
     while (true) {
         ps >> c;
