@@ -40,10 +40,26 @@ void test()
     req->addPattern(new PatternEqual("\n", "nextline"));
     req->addPattern(body);
 
+    std::stringstream ss(file);
+    ss >> std::noskipws;
+
     Parser parser(req);
     ParseStream stream = parser.makeStream();
-    stream.turnOnStreamEoF();
-    stream.next(file);
+
+    std::string str;
+    while (stream.next(str)) {
+        char c;
+        ss >> c;
+        if (ss.eof()) {
+            stream.turnOnStreamEoF();
+            str = "";
+            stream.next(str);
+            break;
+        }
+        std::cout << c;
+        str = c;
+    }
+    std::cout << std::endl;
     ParseResult res = stream.getResult();
     if (stream.isState(INVALID)) std::cout << "( fail )" << std::endl;
     else std::cout << res.toString() << std::endl;
