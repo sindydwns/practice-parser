@@ -19,13 +19,15 @@ public:
     virtual ~ParseResult();
     ParseResult &operator=(const ParseResult &rhs);
 
-    virtual std::string toString() const;
+    std::string toString() const;
     const std::vector<ParseResult> &getChildren() const;
 
 private:
     std::string tag;
     std::string match;
     std::vector<ParseResult> children;
+
+    std::string toString(int depth) const;
 
 };
 
