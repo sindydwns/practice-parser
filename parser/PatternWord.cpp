@@ -52,4 +52,4 @@ ParseStream::CompileResult PatternWord::compile(ParseStream &ps) const
     return ps.done(ParseResult(data->ws + data->buffer, tag), data);
 }
 
-PatternWord::Data::Data() : modeSkipWs(true) { }
+PatternWord::Data::Data() : start(std::streampos(-1)), modeSkipWs(true) { }

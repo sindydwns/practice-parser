@@ -41,4 +41,4 @@ PatternSequenceGroup *PatternSequenceGroup::addPattern(APattern *pattern)
     return this;
 }
 
-PatternSequenceGroup::Data::Data() : searchIdx(0) { }
+PatternSequenceGroup::Data::Data() : start(std::streampos(-1)), searchIdx(0) { }

@@ -45,4 +45,4 @@ ParseStream::CompileResult PatternReadUntil::compile(ParseStream &ps) const
 
 PatternReadUntil *PatternReadUntil::setUseSuffix(bool useSuffix) { this->useSuffix = useSuffix; return this; }
 
-PatternReadUntil::Data::Data() : matchIdx(0) { }
+PatternReadUntil::Data::Data() : start(std::streampos(-1)), matchIdx(0) { }
