@@ -95,7 +95,7 @@ bool ParseStream::next(std::string &str) {
     CompileResult res = pattern->compile(*this);
     this->state = res.state;
     this->result = res.result;
-    return res.state != INVALID;
+    return res.state == PENDING;
 }
 ParseResult &ParseStream::getResult() { return result; }
 
