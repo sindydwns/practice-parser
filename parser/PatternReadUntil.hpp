@@ -8,6 +8,7 @@ class PatternReadUntil: public APattern
 public:
     PatternReadUntil(const std::string suffix);
     PatternReadUntil(const std::string suffix, const std::string tag);
+    PatternReadUntil(const std::string suffix, const std::string stop, const std::string tag);
     ~PatternReadUntil();
 
     virtual ParseStream::CompileResult compile(ParseStream &ps) const;
@@ -18,7 +19,8 @@ public:
         Data();
         std::streampos start;
         std::string buffer;
-        size_t matchIdx;
+        size_t strMatchIdx;
+        size_t stopMatchIdx;
     };
 
 private:
@@ -27,6 +29,7 @@ private:
     PatternReadUntil &operator=(const PatternReadUntil &rhs);
 
     std::string str;
+    std::string stop;
     bool useSuffix;
     
 };

@@ -28,7 +28,7 @@ void test()
     startline->addPattern(new PatternWord("route"));
     startline->addPattern(new PatternWord("http-version"));
     PatternSequenceGroup *header = new PatternSequenceGroup("header");
-    header->addPattern(new PatternReadUntil(":", "key"));
+    header->addPattern(new PatternReadUntil(":", "\n", "key"));
     header->addPattern(new PatternReadUntil("\n", "value"));
     PatternOptionGroup *headers = new PatternOptionGroup(0, 999, "headers");
     headers->addPattern(header);
