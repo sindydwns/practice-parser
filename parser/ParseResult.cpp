@@ -43,7 +43,7 @@ std::string ParseResult::toString(int depth) const
     for (size_t i = 0; i < getChildren().size(); i++) {
         res += getChildren().at(i).toString(depth + 1) + "\n";
     }
-    res += std::string(depth * 2, ' ') + "]";
+    res += std::string(depth * 2, ' ') + "]\n";
     return res;
 }
 const std::vector<ParseResult> &ParseResult::getChildren() const { return this->children; }
